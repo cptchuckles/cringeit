@@ -14,8 +14,8 @@ class ControllerBase:
         @app.route(f"/{self.model_name}", endpoint=f"{self.model_name}/index")
         def index(): return self.index()
 
-        @app.route(f"/{self.model_name}/<int:id>", endpoint=f"{self.model_name}/view")
-        def view(id: int): return self.view(id)
+        @app.route(f"/{self.model_name}/<int:id>", endpoint=f"{self.model_name}/show")
+        def show(id: int): return self.show(id)
 
         @app.route(f"/{self.model_name}/new", endpoint=f"{self.model_name}_new")
         def new(): return self.new()
@@ -36,13 +36,12 @@ class ControllerBase:
         collection = self.model.get_all()
         return render_template(f"views/{self.model_name}/index.html", **{self.collection_name: collection})
 
-    def view(self, id: int):
+    def show(self, id: int):
         item = self.model.get_by_id(id)
-
         if item is None:
             return abort(404)
         else:
-            return render_template(f"/views/{self.model_name}/view.html", **{self.item_name: item})
+            return render_template(f"/views/{self.model_name}/show.html", **{self.item_name: item})
 
     def new(self):
         return render_template(f"/views/{self.model_name}/new.html")
