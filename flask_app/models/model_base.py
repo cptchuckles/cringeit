@@ -70,6 +70,7 @@ class ModelBase:
         if not view:
             return None
 
+        left_item = cls(view[0])
         first_row = {**view[0]}
 
         for key in first_row:
@@ -77,9 +78,9 @@ class ModelBase:
             if right_key in first_row:
                 first_row[key] = first_row[right_key]
 
-        right_item = right(first_row)
+        setattr(left_item, right_model, right(first_row))
 
-        return (cls(view[0]), right_item)
+        return left_item
 
     @classmethod
     def one_join_many(cls, left_id: int, right):
@@ -95,19 +96,16 @@ class ModelBase:
         if not view:
             return None
 
-        first_row = {**view[0]}
-        left_item = cls(first_row)
-
-        right_items = []
+        left_item = cls(view[0])
+        setattr(left_item, right.table, [])
 
         for row in view:
+            if row[f"{right.table}.id"] is None:
+                continue
             for key in row:
                 right_key = f"{right.table}.{key}"
                 if right_key in row:
                     row[key] = row[right_key]
-            if row["id"] is None:
-                right_items = None
-                break
-            right_items.append(right(row))
+            getattr(left_item, right.table).append(right(row))
 
-        return (left_item, right_items)
+        return left_item
