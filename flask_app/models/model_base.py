@@ -2,8 +2,8 @@ from flask_app.config.mysqlconnection import connectToMySQL
 
 
 class ModelBase:
-    db = "books_schema"
-    table = ""
+    db = "SCHEMA_NAME"
+    table = "TABLE_NAME"
     fields = []
 
     def __init__(self, data):
