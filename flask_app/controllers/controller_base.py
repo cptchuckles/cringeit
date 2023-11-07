@@ -1,5 +1,5 @@
 from flask import render_template, abort, request, redirect
-from flask_app.models import ModelBase
+from flask_app.models.model_base import ModelBase
 from flask_app import app
 
 
