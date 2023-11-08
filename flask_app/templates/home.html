@@ -1,5 +1,14 @@
 {% extends "layouts/main.html" %}
 {%- block title -%}Welcome{%- endblock -%}
 {% block content -%}
-<h1>Hello world</h1>
+<div class="wide-row">
+    <div class="card">
+        <h1>Register</h1>
+        {% include "views/user/_form.html" %}
+    </div>
+    <div class="card">
+        <h1>Login</h1>
+        {% include "views/user/_login.html" %}
+    </div>
+</div>
 {%- endblock %}

@@ -1,0 +1,13 @@
+{% extends "layouts/main.html" %}
+{%- block title -%}View Profile - {{ user.first_name }}{%- endblock -%}
+{% block content -%}
+<h1>{{ user.first_name }}</h1>
+<ul>
+    <li>Full name: {{ user.first_name }} {{ user.last_name }}</li>
+    <li>Email address: {{ user.email }}</li>
+    <li>Joined: {{ user.created_at }}</li>
+</ul>
+<div>
+    <a href="/dashboard" class="button">Home</a>
+</div>
+{%- endblock %}

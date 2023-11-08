@@ -1,0 +1,28 @@
+<form action="/user/{% if user is defined %}update{% else %}create{% endif %}" method="POST">
+    {%- with messages = get_flashed_messages(category_filter=["name", "email", "password"]) -%}
+    {% if messages|count > 0 %}
+    <div class="danger flash">
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {%- endwith -%}
+    {% if user is defined %}
+    <input type="hidden" name="id" value="{{ user.id }}" required />
+    {% endif %}
+    <label for="first_name">First name:</label>
+    <input type="text" name="first_name" id="first_name" {%- if user is defined %}value="{{ user.first_name }}"{% endif %} required />
+    <label for="last_name">Last name:</label>
+    <input type="text" name="last_name" id="last_name" {%- if user is defined %}value="{{ user.last_name }}"{% endif %} required />
+    <label for="email">Email address:</label>
+    <input type="email" name="email" id="email" {%- if user is defined %}value="{{ user.email }}"{% endif %} required />
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" required />
+    <label for="confirm-password">Confirm password:</label>
+    <input type="password" name="confirm-password" id="confirm-password" required />
+    <hr>
+    <button class="plus">Create account</button>
+</form>

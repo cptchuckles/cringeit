@@ -1,0 +1,20 @@
+{% extends "layouts/main.html" %}
+{%- block title -%}Welcome, {{ user.first_name }}{%- endblock -%}
+{% block content -%}
+{% with messages = get_flashed_messages(category_filter="success") %}
+{% if messages|count > 0 %}
+<div class="success flash">
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endwith %}
+<h1>Welcome {{ user.first_name }}</h1>
+<div>
+    <a href="/logout" class="danger button">Log Out</a>
+    <a href="/user/{{ user.id }}" class="button">View my Profile</a>
+</div>
+{%- endblock %}

@@ -1,0 +1,18 @@
+<form action="/login" method="POST">
+    {% with messages = get_flashed_messages(category_filter="login") %}
+    {% if messages|count > 0 %}
+    <div class="danger flash">
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% endwith %}
+    <label for="email">Email address:</label>
+    <input type="email" name="email" id="email" required />
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" required />
+    <button>Login</button>
+</form>
