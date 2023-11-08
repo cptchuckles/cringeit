@@ -11,8 +11,8 @@ class ModelBase:
         self.created_at = data["created_at"]
         self.updated_at = data["updated_at"]
 
-        for field in self.__class__.fields:
-            self.__dict__[field] = data[field]
+        for field in type(self).fields:
+            setattr(self, field, data[field])
 
     @classmethod
     def get_all(cls):
