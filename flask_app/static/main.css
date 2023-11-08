@@ -10,9 +10,12 @@
 
   --bg: #333;
   --bg-light: #444;
+
   --button: #08d;
   --plus-button: #475;
   --danger-button: #d44;
+  --button-radius: .35em;
+  --button-padding: .7em;
 
   --form-valid-color: #afd;
   --form-invalid-color: #fba;
@@ -71,8 +74,8 @@ form {
 button, input, select {
   font-size: 1em;
   border: none;
-  border-radius: .25em;
-  padding: .5em;
+  border-radius: var(--button-radius);
+  padding: var(--button-padding);
 }
 
 button, .button {
@@ -84,9 +87,8 @@ button, .button {
 
   border: none;
   box-shadow: 1px 1px black;
-  border-radius: .25em;
-
-  padding: .5em;
+  border-radius: var(--button-radius);
+  padding: var(--button-padding);
 
   color: var(--fg);
   background-color: var(--button);
@@ -159,6 +161,7 @@ ol, ul {
 }
 
 .card {
+  flex: 1;
   margin-bottom: 1em;
   padding: 2em;
   border-radius: 1em;
