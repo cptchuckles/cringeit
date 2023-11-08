@@ -6,7 +6,6 @@ import re
 
 
 class User(ModelBase):
-    db = "user_auth_schema"
     table = "users"
     fields = [
         "first_name",
