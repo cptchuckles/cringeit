@@ -6,7 +6,8 @@
   --fg-heading: #de8;
 
   --fg-flash: #000;
-  --bg-flash-danger: #ff4;
+  --bg-flash-danger: #fa4;
+  --bg-flash-success: #475;
 
   --bg: #333;
   --bg-light: #444;
@@ -154,7 +155,7 @@ ol, ul {
   }
 
   &.success {
-    background-color: var(--plus-button);
+    background-color: var(--bg-flash-success);
     font-style: oblique;
     color: white;
   }
