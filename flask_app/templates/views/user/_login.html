@@ -1,5 +1,5 @@
 <form action="/login" method="POST">
-    {% with messages = get_flashed_messages(category_filter="login") %}
+    {% with messages = get_flashed_messages(category_filter="login-error") %}
     {% if messages|count > 0 %}
     <div class="danger flash">
         <ul>

@@ -1,0 +1,22 @@
+{% with messages = get_flashed_messages(category_filter=error_filters) -%}
+{%- if messages|count > 0 -%}
+<div class="danger flash">
+	<ul>
+		{%- for message in messages -%}
+		<li>{{ message }}</li>
+		{%- endfor -%}
+	</ul>
+</div>
+{%- endif -%}
+{%- endwith -%}
+{%- with messages = get_flashed_messages(category_filter="success") -%}
+{%- if messages|count > 0 -%}
+<div class="success flash">
+	<ul>
+		{%- for message in messages -%}
+		<li>{{ message }}</li>
+		{%- endfor -%}
+	</ul>
+</div>
+{%- endif -%}
+{%- endwith %}

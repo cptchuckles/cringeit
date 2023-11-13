@@ -33,10 +33,10 @@ class User(ModelBase):
     def authenticate_to_id(cls, data):
         target_user = cls.get_by_email(data["email"])
         if target_user is None:
-            flash("Username or password not valid", "login")
+            flash("Username or password not valid", "login-error")
             return None
         elif not bcrypt.check_password_hash(target_user.password_hash, data["password"]):
-            flash("Username or password not valid", "login")
+            flash("Username or password not valid", "login-error")
             return None
         else:
             return target_user.id
@@ -48,51 +48,51 @@ class User(ModelBase):
         # Presence of data
 
         if "first_name" not in data or "last_name" not in data:
-            flash("Please submit a first and last name", "name")
+            flash("Please submit a first and last name", "register-name-error")
             is_valid = False
 
         if "email" not in data:
-            flash("You must provide an email address", "email")
+            flash("You must provide an email address", "register-email-error")
             is_valid = False
 
         if "password" not in data:
-            flash("You must provide a password.", "password")
+            flash("You must provide a password.", "register-password-error")
             is_valid = False
 
         if "confirm-password" not in data:
-            flash("You must provide a password confirmation.", "password")
+            flash("You must provide a password confirmation.", "register-password-error")
             is_valid = False
 
         # Form of data
 
         if not data["first_name"].isalpha() or not data["last_name"].isalpha():
-            flash("First and last name must not contain non-alphabetic characters", "name")
+            flash("First and last name must not contain non-alphabetic characters", "register-name-error")
             is_valid = False
 
         if len(data["first_name"]) < 2 or len(data["last_name"]) < 2:
-            flash("First and last names must be at least two characters each", "name")
+            flash("First and last names must be at least two characters each", "register-name-error")
             is_valid = False
 
         if not cls.valid_email_format.match(data["email"]):
-            flash("Email provided is not valid.", "email")
+            flash("Email provided is not valid.", "register-email-error")
             is_valid = False
 
         if data["password"] != data["confirm-password"]:
-            flash("Password confirmation does not match!", "password")
+            flash("Password confirmation does not match!", "register-password-error")
             is_valid = False
 
         if len(data["password"]) < cls.password_min_length:
-            flash("Password must be at least 8 characters", "password")
+            flash("Password must be at least 8 characters", "register-password-error")
             is_valid = False
 
         if not cls.is_strong_password(data["password"]):
-            flash("Your password is weak babysauce, only chad passwords allowed", "password")
+            flash("Your password is weak babysauce, only chad passwords allowed", "register-password-error")
             is_valid = False
 
         # Duplicates
 
         if "id" not in data and cls.get_by_email(data["email"]) is not None:
-            flash(f"Email address {data['email']} is already in use, please login", "email")
+            flash(f"Email address {data['email']} is already in use, please login", "register-email-error")
             is_valid = False
 
         return is_valid

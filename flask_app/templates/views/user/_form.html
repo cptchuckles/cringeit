@@ -1,16 +1,10 @@
-    {%- with messages = get_flashed_messages(category_filter=["name", "email", "password"]) -%}
-    {% if messages|count > 0 %}
-    <div class="danger flash">
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
 <form action="/users/{% if user is defined and user.id is defined %}update{% else %}create{% endif %}" method="POST">
+    {%- with error_filters = ["register-name-error", "register-email-error", "register-password-error"] -%}
+    {%- with success_filters = [] -%}
+    {%- include "layouts/_flash_messages.html" -%}
     {%- endwith -%}
-    {% if user is defined %}
+    {%- endwith -%}
+    {% if user is defined and user.id is defined %}
     <input type="hidden" name="id" value="{{ user.id }}" required />
     {% endif %}
     <label for="first_name">First name:</label>
