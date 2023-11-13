@@ -53,3 +53,19 @@ class UserController(ControllerBase):
         session["user_id"] = self.model.create(data)
         flash("Success! Welcome to your new account", "success")
         return redirect("/dashboard")
+
+    def update(self, form_data):
+        if "user_id" not in session:
+            return redirect("/")
+
+        user = User.get_by_id(int(form_data["id"]))
+        if user is None or session["user_id"] != int(form_data["id"]):
+            return redirect("/")
+
+        data = {**form_data}
+        data["email"] = data["email"].lower()
+
+        if not User.validate_form_input(data):
+            return redirect(f"/users/{user.id}/edit", user=user)
+
+        return super().update(data)
