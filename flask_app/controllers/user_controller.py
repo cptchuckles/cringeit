@@ -69,3 +69,13 @@ class UserController(ControllerBase):
             return redirect(f"/users/{user.id}/edit", user=user)
 
         return super().update(data)
+
+    def delete(self, id: int):
+        if "user_id" not in session:
+            return redirect("/")
+
+        user = User.get_by_id(id)
+        if user is None or session["user_id"] != user.id:
+            return redirect("/dashboard")
+
+        return super().delete(id)
