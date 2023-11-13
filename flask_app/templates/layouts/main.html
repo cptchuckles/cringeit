@@ -9,7 +9,17 @@
     <body>
         {% block header -%}
         <header>
+            {%- if user is defined and user.id is defined -%}
+            <div class="content wide row">
+                <h1>Welcome</h1>
+                <div class="row" style="justify-content: flex-end;">
+                    <h3>{{ user.username }}</h3>
+                    <a href="/logout" class="danger arrow button">Log Out</a>
+                </div>
+            </div>
+            {%- else -%}
             <div class="content"><h1>Welcome</h1></div>
+            {%- endif -%}
         </header>
         {%- endblock %}
         <main>
