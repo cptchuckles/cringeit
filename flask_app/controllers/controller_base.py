@@ -39,7 +39,7 @@ class ControllerBase:
         if item is None:
             return abort(404)
         else:
-            return render_template(f"/views/{self.model_name}/show.html", **{self.item_name: item})
+            return render_template(f"/views/{self.model_name}/show.html", **{self.model_name: item})
 
     def new(self):
         return render_template(f"/views/{self.model_name}/new.html")
@@ -53,7 +53,7 @@ class ControllerBase:
         if item is None:
             return abort(404)
         else:
-            return render_template(f"/views/{self.model_name}/edit.html", **{self.item_name: item})
+            return render_template(f"/views/{self.model_name}/edit.html", **{self.model_name: item})
 
     def update(self, form_data):
         self.model.update(form_data)
