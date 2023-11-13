@@ -6,7 +6,7 @@ class ModelBase:
     table = ""
     fields = []
 
-    def __init__(self, data):
+    def __init__(self, data: dict):
         self.id = data["id"]
         self.created_at = data["created_at"]
         self.updated_at = data["updated_at"]
@@ -27,7 +27,7 @@ class ModelBase:
         return cls(view[0]) if view else None
 
     @classmethod
-    def create(cls, data):
+    def create(cls, data: dict):
         prepared_fields = [f"%({field})s" for field in cls.fields]
         query = f"""
             INSERT INTO {cls.table}
@@ -38,7 +38,7 @@ class ModelBase:
         return connectToMySQL(cls.db).query_db(query, data)
 
     @classmethod
-    def update(cls, data):
+    def update(cls, data: dict):
         prepared_fields = [f"%({field})s" for field in cls.fields]
         pairs = zip(cls.fields, prepared_fields)
         sets = [f"{pair[0]} = {pair[1]}" for pair in pairs]
