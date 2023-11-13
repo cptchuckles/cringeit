@@ -20,6 +20,8 @@
 
   --form-valid-color: #afd;
   --form-invalid-color: #fba;
+
+  --soft-shadow: 0px 5px 10px black;
 }
 
 * {
@@ -33,15 +35,42 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1em;
-  justify-content: center;
+
+  color: var(--fg);
+  background-color: var(--bg);
 
   min-height: 90vh;
+}
+
+header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  padding: 2em;
+
+  box-shadow: var(--soft-shadow);
+
+  & .content {
+    display: flex;
+    justify-content: space-between;
+    max-width: var(--page-width);
+    margin: auto;
+  }
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
   max-width: var(--page-width);
   width: fit-content;
   margin: auto;
 
-  color: var(--fg);
-  background-color: var(--bg);
+  & p {
+    margin: 1em 0;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -49,7 +78,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 hr {
-  border-color: var(--fg-heading);
+  border-color: var(--fg-dark);
   margin: 1em 0;
 }
 
@@ -132,13 +161,30 @@ ol, ul {
   }
 }
 
-.wide-row {
+.wide {
+  width: 100%;
+}
+
+.page {
+  min-width: fit-content;
+  width: var(--page-width);
+}
+
+.row {
+  flex: 1;
+  width: 100%;
   display: flex;
   flex-direction: row !important;
   align-items: baseline;
   justify-content: space-between;
   gap: 1em;
   width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: .5em;
 }
 
 .flash {
@@ -162,7 +208,6 @@ ol, ul {
 }
 
 .card {
-  flex: 1;
   margin-bottom: 1em;
   padding: 2em;
   border-radius: 1em;

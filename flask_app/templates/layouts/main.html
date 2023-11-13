@@ -7,6 +7,13 @@
         <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
     </head>
     <body>
-        {% block content -%}{%- endblock %}
+        {% block header -%}
+        <header>
+            <div class="content"><h1>Welcome</h1></div>
+        </header>
+        {%- endblock %}
+        <main>
+            {% block content -%}{%- endblock %}
+        </main>
     </body>
 </html>
