@@ -1,0 +1,12 @@
+{% extends "layouts/main.html" %}
+{%- block title -%}Edit {{ user.username }}{%- endblock -%}
+{% block content -%}
+{%- with messages = get_flashed_messages(category_filter=["validate-username-error", "validate-password-error", "validate-email-error"]) -%}
+{%- include "layouts/_flash_messages.html" -%}
+{%- endwith -%}
+<h1>Edit {{ user.username }}</h1>
+<div class="page card">
+    {% include "views/user/_form.html" %}
+</div>
+<a href="/dashboard" class="danger button">Cancel</a>
+{%- endblock %}

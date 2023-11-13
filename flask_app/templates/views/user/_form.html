@@ -1,5 +1,5 @@
 <form action="/users/{% if user is defined and user.id is defined %}update{% else %}create{% endif %}" method="POST">
-    {%- with error_filters = ["register-name-error", "register-email-error", "register-password-error"] -%}
+    {%- with error_filters = ["validate-username-error", "validate-email-error", "validate-password-error"] -%}
     {%- with success_filters = [] -%}
     {%- include "layouts/_flash_messages.html" -%}
     {%- endwith -%}
@@ -7,10 +7,8 @@
     {% if user is defined and user.id is defined %}
     <input type="hidden" name="id" value="{{ user.id }}" required />
     {% endif %}
-    <label for="first_name">First name:</label>
-    <input type="text" name="first_name" id="first_name" {%- if user is defined %}value="{{ user.first_name }}"{% endif %} required />
-    <label for="last_name">Last name:</label>
-    <input type="text" name="last_name" id="last_name" {%- if user is defined %}value="{{ user.last_name }}"{% endif %} required />
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" {%- if user is defined %}value="{{ user.username }}"{% endif %} required />
     <label for="email">Email address:</label>
     <input type="email" name="email" id="email" {%- if user is defined %}value="{{ user.email }}"{% endif %} required />
     <label for="password">Password:</label>
@@ -19,7 +17,7 @@
     <input type="password" name="confirm-password" id="confirm-password" required />
     <hr>
     {% if user is defined and user.id is defined %}
-    <button>Update {{ user.first_name }}</button>
+    <button>Update {{ user.username }}</button>
     {% else %}
     <button class="plus">Create account</button>
     {% endif %}

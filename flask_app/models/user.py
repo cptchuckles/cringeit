@@ -8,8 +8,7 @@ import re
 class User(ModelBase):
     table = "users"
     fields = [
-        "first_name",
-        "last_name",
+        "username",
         "email",
         "password_hash",
     ]
@@ -47,52 +46,52 @@ class User(ModelBase):
 
         # Presence of data
 
-        if "first_name" not in data or "last_name" not in data:
-            flash("Please submit a first and last name", "register-name-error")
+        if "username" not in data:
+            flash("Please submit a username", "validate-username-error")
             is_valid = False
 
         if "email" not in data:
-            flash("You must provide an email address", "register-email-error")
+            flash("You must provide an email address", "validate-email-error")
             is_valid = False
 
         if "password" not in data:
-            flash("You must provide a password.", "register-password-error")
+            flash("You must provide a password.", "validate-password-error")
             is_valid = False
 
         if "confirm-password" not in data:
-            flash("You must provide a password confirmation.", "register-password-error")
+            flash("You must provide a password confirmation.", "validate-password-error")
             is_valid = False
 
         # Form of data
 
-        if not data["first_name"].isalpha() or not data["last_name"].isalpha():
-            flash("First and last name must not contain non-alphabetic characters", "register-name-error")
+        if not data["username"].isalnum():
+            flash("Username must not contain non-alphanumeric characters", "validate-username-error")
             is_valid = False
 
-        if len(data["first_name"]) < 2 or len(data["last_name"]) < 2:
-            flash("First and last names must be at least two characters each", "register-name-error")
+        if len(data["username"]) < 2:
+            flash("Username must be at least two characters long", "validate-username-error")
             is_valid = False
 
         if not cls.valid_email_format.match(data["email"]):
-            flash("Email provided is not valid.", "register-email-error")
+            flash("Email provided is not valid.", "validate-email-error")
             is_valid = False
 
         if data["password"] != data["confirm-password"]:
-            flash("Password confirmation does not match!", "register-password-error")
+            flash("Password confirmation does not match!", "validate-password-error")
             is_valid = False
 
         if len(data["password"]) < cls.password_min_length:
-            flash("Password must be at least 8 characters", "register-password-error")
+            flash("Password must be at least 8 characters", "validate-password-error")
             is_valid = False
 
         if not cls.is_strong_password(data["password"]):
-            flash("Your password is weak babysauce, only chad passwords allowed", "register-password-error")
+            flash("Your password is weak babysauce, only chad passwords allowed", "validate-password-error")
             is_valid = False
 
         # Duplicates
 
         if "id" not in data and cls.get_by_email(data["email"]) is not None:
-            flash(f"Email address {data['email']} is already in use, please login", "register-email-error")
+            flash(f"Email address {data['email']} is already in use, please login", "validate-email-error")
             is_valid = False
 
         return is_valid
