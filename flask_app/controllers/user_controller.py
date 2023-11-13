@@ -29,7 +29,11 @@ class UserController(ControllerBase):
         def dashboard():
             if "user_id" not in session:
                 return redirect("/")
-            return render_template("/views/user/dashboard.html", user=User.get_by_id(int(session["user_id"])))
+            user = User.get_by_id(int(session["user_id"]))
+            if user is None:
+                del session["user_id"]
+                return redirect("/")
+            return render_template("/views/user/dashboard.html", user=user)
 
         @app.route("/logout")
         def logout():
