@@ -7,6 +7,14 @@ class ModelBase:
     fields = []
 
     def __init__(self, data: dict):
+        table = type(self).table
+
+        if data.get(f"{table}.id") is not None:
+            for key in data:
+                my_key = f"{table}.{key}"
+                if my_key in data:
+                    data[key] = data[my_key]
+
         self.id = data["id"]
         self.created_at = data["created_at"]
         self.updated_at = data["updated_at"]
@@ -39,17 +47,13 @@ class ModelBase:
 
     @classmethod
     def update(cls, data: dict):
-        prepared_fields = [f"%({field})s" for field in cls.fields]
-        pairs = zip(cls.fields, prepared_fields)
-        sets = [f"{pair[0]} = {pair[1]}" for pair in pairs]
+        prepared_updates = [f"{field} = %({field})s" for field in cls.fields]
         query = f"""
             UPDATE {cls.table}
-            SET {", ".join(sets)}
+            SET {", ".join(prepared_updates)}
             WHERE id = %(id)s
         """
-        connectToMySQL(cls.db).query_db(query, data)
-
-        return cls.get_by_id(int(data["id"]))
+        return connectToMySQL(cls.db).query_db(query, data)
 
     @classmethod
     def delete(cls, id: int):
@@ -57,7 +61,7 @@ class ModelBase:
         return connectToMySQL(cls.db).query_db(query, {"id": id})
 
     @classmethod
-    def many_join_one(cls, left_id: int, right):
+    def join_one(cls, left_id: int, right):
         right_model = right.__name__.lower()
         query = f"""
             SELECT * FROM {cls.table}
@@ -71,14 +75,12 @@ class ModelBase:
             return None
 
         left_item = cls(view[0])
-        first_row = {**view[0]}
+        if f"{right.table}.id" in view[0]:
+            right_item = right(view[0])
+        else:
+            right_item = None
 
-        for key in first_row:
-            right_key = f"{right.table}.{key}"
-            if right_key in first_row:
-                first_row[key] = first_row[right_key]
-
-        setattr(left_item, right_model, right(first_row))
+        setattr(left_item, right_model, right_item)
 
         return left_item
 
@@ -97,15 +99,7 @@ class ModelBase:
             return None
 
         left_item = cls(view[0])
-        setattr(left_item, right.table, [])
-
-        for row in view:
-            if row[f"{right.table}.id"] is None:
-                continue
-            for key in row:
-                right_key = f"{right.table}.{key}"
-                if right_key in row:
-                    row[key] = row[right_key]
-            getattr(left_item, right.table).append(right(row))
+        right_items = [right(row) for row in view]
+        setattr(left_item, right.table, right_items)
 
         return left_item
