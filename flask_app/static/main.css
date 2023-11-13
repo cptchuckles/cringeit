@@ -133,6 +133,27 @@ button, .button {
   &.danger {
     background-color: var(--danger-button);
     color: var(--fg-dark);
+    &.arrow:before {
+      margin-right: 1ch;
+      display: inline-block;
+      content: " ";
+      height: .5em;
+      width: .5em;
+      border-top: 3px solid var(--fg-dark);
+      border-left: 3px solid var(--fg-dark);
+      transform: rotate(-45deg);
+    }
+  }
+
+  &.arrow:not(.danger):after {
+    margin-left: 1ch;
+    display: inline-block;
+    content: " ";
+    height: .5em;
+    width: .5em;
+    border-top: 3px solid var(--fg);
+    border-right: 3px solid var(--fg);
+    transform: rotate(45deg);
   }
 }
 
