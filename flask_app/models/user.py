@@ -19,13 +19,14 @@ class User(ModelBase):
     @classmethod
     def create(self, form_data):
         data = {**form_data}
+        data["email"] = data["email"].lower()
         data["password_hash"] = bcrypt.generate_password_hash(data["password"], 12)
         return super().create(data)
 
     @classmethod
     def get_by_email(cls, email: str):
         query = f"SELECT * FROM {cls.table} WHERE email = %(email)s;"
-        view = connectToMySQL(cls.db).query_db(query, {"email": email})
+        view = connectToMySQL(cls.db).query_db(query, {"email": email.lower()})
         return cls(view[0]) if view else None
 
     @classmethod

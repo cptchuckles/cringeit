@@ -43,10 +43,7 @@ class UserController(ControllerBase):
 
         return self
 
-    def create(self, form_data):
-        data = {**form_data}
-        data["email"] = data["email"].lower()
-
+    def create(self, data):
         if not User.validate_form_input(data):
             return redirect("/")
 
@@ -54,19 +51,15 @@ class UserController(ControllerBase):
         flash("Success! Welcome to your new account", "success")
         return redirect("/dashboard")
 
-    def update(self, form_data):
+    def update(self, data):
         if "user_id" not in session:
             return redirect("/")
 
-        user = User.get_by_id(int(form_data["id"]))
-        if user is None or session["user_id"] != int(form_data["id"]):
+        if "id" not in data or session["user_id"] != int(data["id"]):
             return redirect("/")
 
-        data = {**form_data}
-        data["email"] = data["email"].lower()
-
         if not User.validate_form_input(data):
-            return redirect(f"/users/{user.id}/edit", user=user)
+            return redirect(f"/users/{data['id']}/edit", user=data)
 
         return super().update(data)
 
@@ -74,8 +67,7 @@ class UserController(ControllerBase):
         if "user_id" not in session:
             return redirect("/")
 
-        user = User.get_by_id(id)
-        if user is None or session["user_id"] != user.id:
+        if session["user_id"] != id:
             return redirect("/dashboard")
 
         return super().delete(id)
