@@ -65,7 +65,7 @@ class UserController(ControllerBase):
             return redirect("/")
 
         if not User.validate_form_input(data):
-            return redirect(f"/users/{data['id']}/edit", user=data)
+            return redirect(f"/users/{data['id']}/edit")
 
         return super().update(data)
 
