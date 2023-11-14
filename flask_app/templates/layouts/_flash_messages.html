@@ -9,7 +9,7 @@
 </div>
 {%- endif -%}
 {%- endwith -%}
-{%- with messages = get_flashed_messages(category_filter="success") -%}
+{%- with messages = get_flashed_messages(category_filter=success_filters) -%}
 {%- if messages|count > 0 -%}
 <div class="success flash">
 	<ul>
