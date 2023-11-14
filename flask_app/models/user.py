@@ -1,4 +1,4 @@
-from flask import flash
+from flask import flash, session
 from flask_app.models.model_base import ModelBase
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app import bcrypt
@@ -93,6 +93,9 @@ class User(ModelBase):
         if "id" not in data and cls.get_by_email(data["email"]) is not None:
             flash(f"Email address {data['email']} is already in use, please login", "validate-email-error")
             is_valid = False
+
+        if not is_valid:
+            session["redo"] = data
 
         return is_valid
 

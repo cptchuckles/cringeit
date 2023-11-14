@@ -11,4 +11,10 @@ bcrypt = Bcrypt(app)
 def home():
     if "user_id" in session:
         return redirect("/dashboard")
-    return render_template("home.html")
+
+    args = {}
+    if "redo" in session:
+        args["user"] = session["redo"]
+        del session["redo"]
+
+    return render_template("home.html", **args)
