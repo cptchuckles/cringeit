@@ -51,6 +51,12 @@ class UserController(ControllerBase):
         flash("Success! Welcome to your new account", "success")
         return redirect("/dashboard")
 
+    def edit(self, id: int):
+        if "user_id" not in session or session["user_id"] != id:
+            return redirect("/")
+
+        return super().edit(id)
+
     def update(self, data):
         if "user_id" not in session:
             return redirect("/")
