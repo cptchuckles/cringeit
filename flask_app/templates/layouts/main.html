@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>{%- block title -%}{%- endblock -%}</title>
+        <title>{%- block title -%}CringeIt®™{%- endblock -%}</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
@@ -11,7 +11,7 @@
         <header>
             {%- if user is defined and user.id is defined -%}
             <div class="content wide row">
-                <h1>Welcome</h1>
+                <h1>CringeIt®™</h1>
                 <div class="row" style="justify-content: flex-end;">
                     <h3>{{ user.username }}</h3>
                     <a href="/logout" class="danger arrow button">Log Out</a>
