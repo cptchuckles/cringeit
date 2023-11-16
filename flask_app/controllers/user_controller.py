@@ -37,8 +37,7 @@ class UserController(ControllerBase):
 
         @app.route("/logout")
         def logout():
-            if "user_id" in session:
-                del session["user_id"]
+            session.clear()
             return redirect("/")
 
         return self
