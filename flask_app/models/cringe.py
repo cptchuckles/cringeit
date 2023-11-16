@@ -6,15 +6,11 @@ from flask_app.models import user
 class Cringe(ModelBase):
     table = "cringe"
     fields = [
-        "id",
         "user_id",
         "headline",
         "url",
         "description",
-        "created_at",
-        "updated_at",
     ]
-    pk = "id"
 
     @classmethod
     def get_by_id(cls, id: int):

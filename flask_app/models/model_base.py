@@ -5,7 +5,12 @@ class ModelBase:
     db = "cringeit_schema"
     table = ""
     fields = []
-    pk = None
+    default_fields = [
+        "id",
+        "created_at",
+        "updated_at",
+    ]
+    pk = "id"
 
     def __init__(self, data: dict):
         cls = type(self)
@@ -17,7 +22,7 @@ class ModelBase:
                 if my_key in data:
                     data[key] = data[my_key]
 
-        for field in cls.fields:
+        for field in cls.fields + cls.default_fields:
             setattr(self, field, data[field])
 
     @classmethod

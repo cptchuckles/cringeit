@@ -8,15 +8,11 @@ import re
 class User(ModelBase):
     table = "users"
     fields = [
-        "id",
         "username",
         "email",
         "password_hash",
         "is_admin",
-        "created_at",
-        "updated_at",
     ]
-    pk = "id"
 
     valid_email_format = re.compile(r"^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$")
     password_min_length = 8
