@@ -2,7 +2,7 @@ from flask_app.config.mysqlconnection import connectToMySQL
 
 
 class ModelBase:
-    db = ""
+    db = "cringeit_schema"
     table = ""
     fields = []
     pk = None
