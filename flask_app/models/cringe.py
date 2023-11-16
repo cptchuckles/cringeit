@@ -18,11 +18,11 @@ class Cringe(ModelBase):
 
     @classmethod
     def get_all(cls):
-        model = cls.__name__.lower()
+        users = user.User.table
         query = f"""
             SELECT * FROM {cls.table}
-            JOIN {user.User.table}
-            ON {user.User.table}.{model}_id = {cls.table}.id
+            JOIN {users}
+                ON {cls.table}.user_id = {users}.id
         """
         view = connectToMySQL(cls.db).query_db(query)
 
