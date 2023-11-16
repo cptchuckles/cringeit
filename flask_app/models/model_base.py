@@ -5,21 +5,19 @@ class ModelBase:
     db = ""
     table = ""
     fields = []
+    pk = None
 
     def __init__(self, data: dict):
-        table = type(self).table
+        cls = type(self)
+        table = cls.table
 
-        if data.get(f"{table}.id") is not None:
+        if cls.pk is None or data.get(f"{table}.{cls.pk}") is not None:
             for key in data:
                 my_key = f"{table}.{key}"
                 if my_key in data:
                     data[key] = data[my_key]
 
-        self.id = data["id"]
-        self.created_at = data["created_at"]
-        self.updated_at = data["updated_at"]
-
-        for field in type(self).fields:
+        for field in cls.fields:
             setattr(self, field, data[field])
 
     @classmethod
