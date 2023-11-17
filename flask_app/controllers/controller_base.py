@@ -39,8 +39,8 @@ class ControllerBase:
         item = self.model.get_by_id(id)
         if item is None:
             return abort(404)
-        return render_template(f"/views/{self.model_name}/show.html",
-                               **{self.model_name: item, **kwargs})
+        kwargs[self.model_name] = item
+        return render_template(f"/views/{self.model_name}/show.html", **kwargs)
 
     def new(self, **kwargs):
         return render_template(f"/views/{self.model_name}/new.html", **kwargs)
@@ -53,8 +53,8 @@ class ControllerBase:
         item = self.model.get_by_id(id)
         if item is None:
             return abort(404)
-        return render_template(f"/views/{self.model_name}/edit.html",
-                               **{self.model_name: item, **kwargs})
+        kwargs[self.model_name] = item
+        return render_template(f"/views/{self.model_name}/edit.html", **kwargs)
 
     def update(self, form_data):
         self.model.update(form_data)
