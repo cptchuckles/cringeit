@@ -9,8 +9,12 @@
     <label for="email">Email address:</label>
     <input type="email" name="email" id="email" {%- if user is defined %}value="{{ user.email }}"{% endif %} required />
     {% if user is defined and user.id is defined %}
+    {% if not auth_user.is_admin or user.id == auth_user.id %}
     <label for="current-password">Current Password:</label>
     <input type="password" name="current-password" id="current-password" required />
+    {% else %}
+    <input type="hidden" name="current-password" value="NA" />
+    {% endif %}
     {% else %}
     <label for="new-password">Password:</label>
     <input type="password" name="new-password" id="new-password" required />

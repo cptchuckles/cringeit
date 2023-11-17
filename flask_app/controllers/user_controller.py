@@ -29,11 +29,13 @@ class UserController(ControllerBase):
 
         @app.route("/dashboard")
         @authorize_action()
-        def dashboard(user):
-            if user is None:
+        def dashboard(auth_user):
+            if auth_user is None:
                 del session["user_id"]
                 return redirect("/")
-            return render_template("/views/user/dashboard.html", user=user, all_cringe=Cringe.get_all())
+            return render_template("/views/user/dashboard.html",
+                                   auth_user=auth_user,
+                                   all_cringe=Cringe.get_all())
 
         @app.route("/logout")
         def logout():
@@ -50,9 +52,13 @@ class UserController(ControllerBase):
         flash("Success! Welcome to your new account", "success")
         return redirect("/dashboard")
 
+    @authorize_action()
+    def show(self, id: int, **kwargs):
+        return super().show(id, **kwargs)
+
     @authorize_action(as_self=True)
     def edit(self, id: int, **kwargs):
-        return super().edit(id)
+        return super().edit(id, **kwargs)
 
     @authorize_action(as_self=True)
     def update(self, data, **kwargs):

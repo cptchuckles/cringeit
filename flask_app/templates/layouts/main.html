@@ -9,11 +9,11 @@
     <body>
         {% block header -%}
         <header>
-            {%- if user is defined and user.id is defined -%}
+            {%- if auth_user is defined and auth_user.id is defined -%}
             <div class="content wide row">
                 <h1>CringeIt®™</h1>
                 <div class="row" style="justify-content: flex-end;">
-                    <h3><a href="/users/{{ user.id }}">{{ user.username }}</a></h3>
+                    <h3><a href="/users/{{ auth_user.id }}">{{ auth_user.username }}</a></h3>
                     <a href="/logout" class="left-arrow danger button">Log Out</a>
                 </div>
             </div>

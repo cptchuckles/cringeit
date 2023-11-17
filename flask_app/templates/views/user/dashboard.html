@@ -1,5 +1,5 @@
 {% extends "layouts/main.html" %}
-{%- block title -%}Welcome, {{ user.username }}{%- endblock -%}
+{%- block title -%}Welcome, {{ auth_user.username }}{%- endblock -%}
 {% block content -%}
 <main class="content column" style="gap: 1em;">
     {% include "layouts/_flash_messages.html" %}

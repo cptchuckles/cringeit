@@ -9,8 +9,8 @@ def authorize_action(as_admin=False, as_owner=False, as_self=False, anonymous_to
                 flash("Please login to use this feature", "error")
                 return redirect(anonymous_to)
 
-            user = User.get_by_id(session["user_id"])
-            kwargs["user"] = user
+            auth_user = User.get_by_id(session["user_id"])
+            kwargs["auth_user"] = auth_user
             authorized = True
 
             if as_owner is True:
@@ -22,13 +22,13 @@ def authorize_action(as_admin=False, as_owner=False, as_self=False, anonymous_to
                 item = controller.model.get_by_id(id)
                 kwargs[controller.model.__name__.lower()] = item
 
-            if not user.is_admin:
+            if not auth_user.is_admin:
                 if as_admin is True:
                     authorized = False
 
                 elif as_owner is True:
                     owner_id = getattr(item, "user_id", None)
-                    if user.id != owner_id:
+                    if auth_user.id != owner_id:
                         authorized = False
 
                 elif as_self is True:
@@ -36,7 +36,7 @@ def authorize_action(as_admin=False, as_owner=False, as_self=False, anonymous_to
                         id = int(args[1].get("id"))
                     else:
                         id = args[1]
-                    if user.id != id:
+                    if auth_user.id != id:
                         authorized = False
 
             if authorized is False:

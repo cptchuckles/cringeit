@@ -9,13 +9,13 @@ class CringeController(ControllerBase):
         super().__init__(Cringe)
 
     @authorize_action()
-    def new(self, user):
-        return super().new(user=user)
+    def new(self, auth_user):
+        return super().new(auth_user=auth_user)
 
     @authorize_action()
-    def create(self, form_data, user):
+    def create(self, form_data, auth_user):
         data = {**form_data}
-        data["user_id"] = user.id
+        data["user_id"] = auth_user.id
         return super().create(data)
 
     @authorize_action(as_owner=True)

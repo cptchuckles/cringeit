@@ -10,7 +10,9 @@
     </ul>
     <div class="short row">
         <a href="/dashboard" class="button">Home</a>
+        {% if auth_user.id == user.id or auth_user.is_admin %}
         <a href="/users/{{ user.id }}/edit" class="button">Edit Profile</a>
+        {% endif %}
     </div>
 </main>
 {%- endblock %}
