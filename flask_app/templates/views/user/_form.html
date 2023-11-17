@@ -1,18 +1,28 @@
 <form action="/users/{% if user is defined and user.id is defined %}update{% else %}create{% endif %}" method="POST">
     {% if user is defined and user.id is defined %}
     <input type="hidden" name="id" value="{{ user.id }}" required />
+    {% else %}
+    <input type="hidden" name="setting-password" value="true" />
     {% endif %}
     <label for="username">Username</label>
     <input type="text" name="username" id="username" {%- if user is defined %}value="{{ user.username }}"{% endif %} required />
     <label for="email">Email address:</label>
     <input type="email" name="email" id="email" {%- if user is defined %}value="{{ user.email }}"{% endif %} required />
-    <label for="password">Password:</label>
-    <input type="password" name="password" id="password" required />
+    {% if user is defined and user.id is defined %}
+    <label for="current-password">Current Password:</label>
+    <input type="password" name="current-password" id="current-password" required />
+    {% else %}
+    <label for="new-password">Password:</label>
+    <input type="password" name="new-password" id="new-password" required />
     <label for="confirm-password">Confirm password:</label>
     <input type="password" name="confirm-password" id="confirm-password" required />
+    {% endif %}
     <hr>
     {% if user is defined and user.id is defined %}
-    <button>Update {{ user.username }}</button>
+    <div class="row">
+        <a href="/users/{{ user.id }}" class="danger arrow button">Cancel</a>
+        <button>Update {{ user.username }}</button>
+    </div>
     {% else %}
     <button class="plus">Create account</button>
     {% endif %}
