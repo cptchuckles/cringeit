@@ -100,11 +100,12 @@ form {
   }
 }
 
-button, input, select {
+textarea, button, input, select {
   font-size: 1em;
   border: none;
   border-radius: var(--button-radius);
   padding: var(--button-padding);
+  resize: none;
 }
 
 button, .button {

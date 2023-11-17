@@ -2,6 +2,7 @@
 {% block title %}Post Cringe{% endblock %}
 {% block content -%}
 <main class="content column">
-    <h1>post cringe</h1>
+    {% include "layouts/_flash_messages.html" %}
+    {% include "views/cringe/_form.html" %}
 </main>
 {%- endblock %}
