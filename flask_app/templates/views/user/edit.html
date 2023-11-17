@@ -2,8 +2,18 @@
 {%- block title -%}Edit {{ user.username }}{%- endblock -%}
 {% block content -%}
 {% include "layouts/_flash_messages.html" %}
-<h1>Edit {{ user.username }}</h1>
-<div class="wide card">
-    {% include "views/user/_form.html" %}
-</div>
+<main class="content row">
+    <div class="wide column">
+        <h1>Edit {{ user.username }}</h1>
+        <div class="wide card">
+            {% include "views/user/_form.html" %}
+        </div>
+    </div>
+    <div>
+        <h2>Actions</h2>
+        <div class="card">
+            <a href="/users/{{ user.id }}/delete" class="danger button">Delete Account</a>
+        </div>
+    </div>
+</main>
 {%- endblock %}

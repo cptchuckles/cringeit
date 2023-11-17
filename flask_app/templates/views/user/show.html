@@ -2,14 +2,15 @@
 {%- block title -%}View Profile - {{ user.username }}{%- endblock -%}
 {% block content -%}
 {% include "layouts/_flash_messages.html" %}
-<h1>{{ user.username }}</h1>
-<ul>
-    <li>Email address: {{ user.email }}</li>
-    <li>Joined: {{ user.created_at }}</li>
-</ul>
-<div class="wide row">
-    <a href="/dashboard" class="button">Home</a>
-    <a href="/users/{{ user.id }}/edit" class="button">Edit Profile</a>
-    <a href="/users/{{ user.id }}/delete" class="danger button">Delete Account</a>
-</div>
+<main class="content column">
+    <h1>{{ user.username }}</h1>
+    <ul>
+        <li>Email address: {{ user.email }}</li>
+        <li>Joined: {{ user.created_at }}</li>
+    </ul>
+    <div class="short row">
+        <a href="/dashboard" class="button">Home</a>
+        <a href="/users/{{ user.id }}/edit" class="button">Edit Profile</a>
+    </div>
+</main>
 {%- endblock %}

@@ -1,5 +1,5 @@
 :root {
-  --page-width: 1200px;
+  --page-width: 1000px;
 
   --fg: #ddd;
   --fg-dark: #000;
@@ -32,14 +32,11 @@
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-
   color: var(--fg);
   background-color: var(--bg);
 
   min-height: 90vh;
+  min-width: 600px;
 }
 
 header {
@@ -51,12 +48,15 @@ header {
 
   box-shadow: var(--soft-shadow);
 
-  & .content {
-    display: flex;
-    justify-content: space-between;
-    max-width: var(--page-width);
-    margin: auto;
-  }
+  margin-bottom: 2em;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  max-width: var(--page-width);
+  width: 100%;
+  margin: auto;
 }
 
 main {
@@ -64,8 +64,7 @@ main {
   flex-direction: column;
   gap: 1em;
 
-  max-width: var(--page-width);
-  width: fit-content;
+  min-width: fit-content;
   margin: auto;
 
   & p {
@@ -113,6 +112,7 @@ button, .button {
 
   font-weight: bold;
   text-decoration: none !important;
+  min-width: max-content;
   cursor: pointer;
 
   border: none;
@@ -186,24 +186,15 @@ ol, ul {
   }
 }
 
-.wide {
-  width: 100%;
-}
-
-.page {
-  min-width: fit-content;
-  width: var(--page-width);
-}
-
 .row {
-  flex: 1;
-  width: 100%;
   display: flex;
   flex-direction: row !important;
   align-items: baseline;
   justify-content: space-between;
   gap: 1em;
   width: 100%;
+  min-width: fit-content;
+  margin: auto;
 }
 
 .column {
@@ -245,4 +236,18 @@ ol, ul {
   & h1 {
     margin-bottom: 1em;
   }
+}
+
+.page {
+  width: var(--page-width);
+}
+
+.wide {
+  flex: 1;
+  width: 100%;
+}
+
+.short {
+  width: fit-content;
+  margin: 0;
 }
