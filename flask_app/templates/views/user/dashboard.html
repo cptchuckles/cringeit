@@ -2,9 +2,11 @@
 {%- block title -%}Welcome, {{ user.username }}{%- endblock -%}
 {% block content -%}
 {% include "layouts/_flash_messages.html" %}
-<h1>Welcome {{ user.username }}</h1>
-<div>
-    <a href="/logout" class="danger button">Log Out</a>
-    <a href="/users/{{ user.id }}" class="button">View my Profile</a>
-</div>
+<main class="content column">
+    <h1>Welcome {{ user.username }}</h1>
+    <div>
+        <a href="/logout" class="danger button">Log Out</a>
+        <a href="/users/{{ user.id }}" class="button">View my Profile</a>
+    </div>
+</main>
 {%- endblock %}

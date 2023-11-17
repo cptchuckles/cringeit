@@ -1,14 +1,16 @@
 {% extends "layouts/main.html" %}
 {% block content -%}
-{% include "layouts/_flash_messages.html" %}
-<div class="row">
-    <div class="card">
-        <h1>Register</h1>
-        {% include "views/user/_form.html" %}
+<main class="short column" style="margin: auto;">
+    {% include "layouts/_flash_messages.html" %}
+    <div class="short row" style="margin: auto;">
+        <div class="card">
+            <h1>Register</h1>
+            {% include "views/user/_form.html" %}
+        </div>
+        <div class="card">
+            <h1>Login</h1>
+            {% include "views/user/_login.html" %}
+        </div>
     </div>
-    <div class="card">
-        <h1>Login</h1>
-        {% include "views/user/_login.html" %}
-    </div>
-</div>
+</main>
 {%- endblock %}
