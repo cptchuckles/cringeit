@@ -30,30 +30,31 @@ class ControllerBase:
         @app.route(f"/{self.model.table}/<int:id>/delete", endpoint=f"{self.model.table}/delete")
         def delete(id: int): return self.delete(id)
 
-    def index(self):
+    def index(self, **kwargs):
         collection = self.model.get_all()
-        return render_template(f"views/{self.model_name}/index.html", **{self.model.table: collection})
+        return render_template(f"views/{self.model_name}/index.html",
+                               **{self.model.table: collection, **kwargs})
 
-    def show(self, id: int):
+    def show(self, id: int, **kwargs):
         item = self.model.get_by_id(id)
         if item is None:
             return abort(404)
-        else:
-            return render_template(f"/views/{self.model_name}/show.html", **{self.model_name: item})
+        return render_template(f"/views/{self.model_name}/show.html",
+                               **{self.model_name: item, **kwargs})
 
-    def new(self):
-        return render_template(f"/views/{self.model_name}/new.html")
+    def new(self, **kwargs):
+        return render_template(f"/views/{self.model_name}/new.html", **kwargs)
 
     def create(self, form_data):
         new_id = self.model.create(form_data)
         return redirect(f"/{self.model.table}/{new_id}")
 
-    def edit(self, id: int):
+    def edit(self, id: int, **kwargs):
         item = self.model.get_by_id(id)
         if item is None:
             return abort(404)
-        else:
-            return render_template(f"/views/{self.model_name}/edit.html", **{self.model_name: item})
+        return render_template(f"/views/{self.model_name}/edit.html",
+                               **{self.model_name: item, **kwargs})
 
     def update(self, form_data):
         self.model.update(form_data)
