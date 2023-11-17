@@ -7,8 +7,15 @@
         <h1>Cringe Feed</h1>
         <a href="/cringe/new" class="plus button">Post Cringe</a>
     </div>
+    {% if all_cringe|count == 0 %}
+    <div class="wide card" style="text-align: center;">
+        <h1>There is no cringe anywhere</h1>
+        <p>You can help by <a href="/cringe/new">posting cringe</a></p>
+    </div>
+    {% else %}
     {% for cringe in all_cringe %}
     {% include "views/cringe/_insert.html" %}
     {% endfor %}
+    {% endif %}
 </main>
 {%- endblock %}
