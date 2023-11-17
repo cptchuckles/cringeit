@@ -4,7 +4,7 @@ from flask_app.models.user import User
 
 def authorize_view(as_admin=False, as_id=None, anonymous_to="/", unauthorized_to="/dashboard"):
     def decorator(render):
-        def policy(controller):
+        def policy(*args, **kwargs):
             if "user_id" not in session:
                 print("not authenticated!")
                 return redirect(anonymous_to)
@@ -20,7 +20,8 @@ def authorize_view(as_admin=False, as_id=None, anonymous_to="/", unauthorized_to
                     print("user is not admin!")
                     return redirect(unauthorized_to)
 
-            return render(controller, user=user)
+            kwargs["user"] = user
+            return render(*args, **kwargs)
 
         return policy
 
