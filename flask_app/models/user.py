@@ -66,6 +66,8 @@ class User(ModelBase):
         if "is_admin" not in data:
             data["is_admin"] = user.is_admin
 
+        flash("Updated account information successfully", "success")
+
         return super().update(cls.format_data(data))
 
     @classmethod
