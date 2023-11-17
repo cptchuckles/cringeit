@@ -75,4 +75,5 @@ class UserController(ControllerBase):
         if session["user_id"] != id:
             return redirect("/dashboard")
 
-        return super().delete(id)
+        self.model.delete(id)
+        return redirect("/logout")
