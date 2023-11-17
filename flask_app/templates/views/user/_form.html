@@ -5,9 +5,9 @@
     <input type="hidden" name="setting-password" value="true" />
     {% endif %}
     <label for="username">Username</label>
-    <input type="text" name="username" id="username" {%- if user is defined %}value="{{ user.username }}"{% endif %} required />
+    <input type="text" name="username" id="username" {% if user is defined %}value="{{ user.username }}"{% endif %} required />
     <label for="email">Email address:</label>
-    <input type="email" name="email" id="email" {%- if user is defined %}value="{{ user.email }}"{% endif %} required />
+    <input type="email" name="email" id="email" {% if user is defined %}value="{{ user.email }}"{% endif %} required />
     {% if user is defined and user.id is defined %}
     {% if not auth_user.is_admin or user.id == auth_user.id %}
     <label for="current-password">Current Password:</label>
