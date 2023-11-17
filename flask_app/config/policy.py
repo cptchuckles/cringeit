@@ -35,7 +35,6 @@ def authorize_view(as_admin=False, as_owner=False, as_self=False, anonymous_to="
                     else:
                         id = args[1]
                     if user.id != id:
-                        print(f"Current user id: {user.id} - Self id: {id} - Mismatch!")
                         authorized = False
 
             if authorized is False:
