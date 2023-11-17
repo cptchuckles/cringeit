@@ -1,6 +1,7 @@
 {% extends "layouts/main.html" %}
 {%- block title -%}View Profile - {{ user.username }}{%- endblock -%}
 {% block content -%}
+{% include "layouts/_flash_messages.html" %}
 <h1>{{ user.username }}</h1>
 <ul>
     <li>Email address: {{ user.email }}</li>

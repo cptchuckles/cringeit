@@ -1,7 +1,4 @@
-{%- set error_filters = ["validate-username-error", "validate-email-error", "validate-password-error"] -%}
-{%- set success_filters = "none" -%}
 <form action="/users/{% if user is defined and user.id is defined %}update{% else %}create{% endif %}" method="POST">
-    {%- include "layouts/_flash_messages.html" -%}
     {% if user is defined and user.id is defined %}
     <input type="hidden" name="id" value="{{ user.id }}" required />
     {% endif %}
