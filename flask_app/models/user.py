@@ -17,12 +17,21 @@ class User(ModelBase):
     valid_email_format = re.compile(r"^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$")
     password_min_length = 8
 
-    @classmethod
-    def create(self, form_data):
+    @staticmethod
+    def format_data(form_data: dict) -> dict:
         data = {**form_data}
         data["email"] = data["email"].lower()
-        data["password_hash"] = bcrypt.generate_password_hash(data["password"], 12)
-        return super().create(data)
+
+        if "new-password" in data:
+            data["password_hash"] = bcrypt.generate_password_hash(data["new-password"], 12)
+
+        return data
+
+    @classmethod
+    def create(cls, form_data):
+        data = {**form_data}
+        data["is_admin"] = 0
+        return super().create(cls.format_data(data))
 
     @classmethod
     def get_by_email(cls, email: str):
