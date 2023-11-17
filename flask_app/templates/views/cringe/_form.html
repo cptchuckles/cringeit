@@ -1,4 +1,9 @@
-<form action="/cringe/create" method="POST" class="page column" style="gap: 2em;">
+<form
+    action="/cringe/{% if cringe is defined and cringe.id is defined %}update{% else %}create{% endif %}"
+    method="POST"
+    class="page column"
+    style="gap: 2em;"
+>
     <input type="text" name="headline" id="headline" style="font-size: 1.5em;" placeholder="Enter a Clickbait Cringe Headline" />
     <div class="row">
         <label for="url">Source of Cringe URL:</label>
