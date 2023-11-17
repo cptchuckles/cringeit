@@ -1,6 +1,7 @@
 from flask import redirect, session, render_template, flash, request
 from flask_app.controllers.controller_base import ControllerBase
 from flask_app.models.user import User
+from flask_app.models.cringe import Cringe
 from flask_app import app
 
 
@@ -33,7 +34,7 @@ class UserController(ControllerBase):
             if user is None:
                 del session["user_id"]
                 return redirect("/")
-            return render_template("/views/user/dashboard.html", user=user)
+            return render_template("/views/user/dashboard.html", user=user, all_cringe=Cringe.get_all())
 
         @app.route("/logout")
         def logout():

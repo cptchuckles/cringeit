@@ -7,7 +7,7 @@
         <h1>Cringe Feed</h1>
         <a href="/cringe/new" class="plus button">Post Cringe</a>
     </div>
-    {% for cringe in [1,2] %}
+    {% for cringe in all_cringe %}
     {% include "views/cringe/_insert.html" %}
     {% endfor %}
 </main>
