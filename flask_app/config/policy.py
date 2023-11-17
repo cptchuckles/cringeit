@@ -2,7 +2,7 @@ from flask import redirect, session, flash
 from flask_app.models.user import User
 
 
-def authorize_view(as_admin=False, as_owner=False, as_self=False, anonymous_to="/", unauthorized_to="/dashboard"):
+def authorize_action(as_admin=False, as_owner=False, as_self=False, anonymous_to="/", unauthorized_to="/dashboard"):
     def decorator(endpoint):
         def policy(*args, **kwargs):
             if "user_id" not in session:

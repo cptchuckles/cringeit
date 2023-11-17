@@ -1,5 +1,5 @@
 from flask import redirect, session, render_template, flash, request
-from flask_app.config.policy import authorize_view
+from flask_app.config.policy import authorize_action
 from flask_app.controllers.controller_base import ControllerBase
 from flask_app.models.user import User
 from flask_app.models.cringe import Cringe
@@ -28,7 +28,7 @@ class UserController(ControllerBase):
             return redirect("/dashboard")
 
         @app.route("/dashboard")
-        @authorize_view()
+        @authorize_action()
         def dashboard(user):
             if user is None:
                 del session["user_id"]
@@ -50,18 +50,18 @@ class UserController(ControllerBase):
         flash("Success! Welcome to your new account", "success")
         return redirect("/dashboard")
 
-    @authorize_view(as_self=True)
+    @authorize_action(as_self=True)
     def edit(self, id: int, **kwargs):
         return super().edit(id)
 
-    @authorize_view(as_self=True)
+    @authorize_action(as_self=True)
     def update(self, data, **kwargs):
         if not User.validate_form_input(data):
             return redirect(f"/users/{data['id']}/edit")
         else:
             return super().update(data)
 
-    @authorize_view(as_self=True)
+    @authorize_action(as_self=True)
     def delete(self, id: int, **kwargs):
         self.model.delete(id)
         return redirect("/logout")
