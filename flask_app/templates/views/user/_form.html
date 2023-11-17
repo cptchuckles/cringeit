@@ -20,7 +20,7 @@
     <hr>
     {% if user is defined and user.id is defined %}
     <div class="row">
-        <a href="/users/{{ user.id }}" class="danger arrow button">Cancel</a>
+        <a href="/users/{{ user.id }}" class="left-arrow clear button">Cancel</a>
         <button>Update {{ user.username }}</button>
     </div>
     {% else %}

@@ -130,22 +130,18 @@ button, .button {
     }
   }
 
-  &.danger {
-    background-color: var(--danger-button);
-    color: var(--fg-dark);
-    &.arrow:before {
-      margin-right: 1ch;
-      display: inline-block;
-      content: " ";
-      height: .5em;
-      width: .5em;
-      border-top: 3px solid var(--fg-dark);
-      border-left: 3px solid var(--fg-dark);
-      transform: rotate(-45deg);
-    }
+  &.left-arrow:before {
+    margin-right: 1ch;
+    display: inline-block;
+    content: " ";
+    height: .5em;
+    width: .5em;
+    border-top: 3px solid var(--fg);
+    border-left: 3px solid var(--fg);
+    transform: rotate(-45deg);
   }
 
-  &.arrow:not(.danger):after {
+  &.right-arrow:after {
     margin-left: 1ch;
     display: inline-block;
     content: " ";
@@ -154,6 +150,14 @@ button, .button {
     border-top: 3px solid var(--fg);
     border-right: 3px solid var(--fg);
     transform: rotate(45deg);
+  }
+
+  &.danger {
+    background-color: var(--danger-button);
+    color: var(--fg-dark);
+    &.left-arrow:before, &.right-arrow:after {
+      border-color: var(--fg-dark) !important;
+    }
   }
 
   &.clear {
