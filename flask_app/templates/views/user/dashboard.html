@@ -2,11 +2,13 @@
 {%- block title -%}Welcome, {{ user.username }}{%- endblock -%}
 {% block content -%}
 {% include "layouts/_flash_messages.html" %}
-<main class="content column">
-    <h1>Welcome {{ user.username }}</h1>
-    <div>
-        <a href="/logout" class="danger button">Log Out</a>
-        <a href="/users/{{ user.id }}" class="button">View my Profile</a>
+<main class="content column" style="gap: 1em;">
+    <div class="page row">
+        <h1>Cringe Feed</h1>
+        <a href="/cringe/new" class="plus button">Post Cringe</a>
     </div>
+    {% for cringe in [1,2] %}
+    {% include "views/cringe/_insert.html" %}
+    {% endfor %}
 </main>
 {%- endblock %}
