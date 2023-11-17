@@ -27,11 +27,46 @@ class User(ModelBase):
 
         return data
 
+    @staticmethod
+    def validate_edit_authority(editor, user, data):
+        if editor.id != user.id:
+            if not editor.is_admin:
+                flash("You do not have authority to update this user", "error")
+                return False
+        elif not bcrypt.check_password_hash(user.password_hash, data["current-password"]):
+            flash("Password incorrect", "error")
+            return False
+
+        return True
+
     @classmethod
     def create(cls, form_data):
         data = {**form_data}
         data["is_admin"] = 0
         return super().create(cls.format_data(data))
+
+    @classmethod
+    def update(cls, form_data):
+        if "user_id" not in session:
+            return
+
+        editor = cls.get_by_id(session["user_id"])
+
+        if session["user_id"] == int(form_data["id"]):
+            user = editor
+        else:
+            user = cls.get_by_id(int(form_data["id"]))
+
+        if not cls.validate_edit_authority(editor, user, form_data):
+            return
+
+        data = {**form_data}
+        data["password_hash"] = user.password_hash
+
+        if "is_admin" not in data:
+            data["is_admin"] = user.is_admin
+
+        return super().update(cls.format_data(data))
 
     @classmethod
     def get_by_email(cls, email: str):
@@ -52,28 +87,16 @@ class User(ModelBase):
             return target_user.id
 
     @classmethod
-    def validate_form_input(cls, data) -> bool:
+    def validate_form_input(cls, form_data) -> bool:
         is_valid = True
+        data = {**form_data}
 
-        # Presence of data
-
-        if "username" not in data:
-            flash("Please submit a username", "validate-username-error")
-            is_valid = False
-
-        if "email" not in data:
-            flash("You must provide an email address", "validate-email-error")
-            is_valid = False
-
-        if "password" not in data:
-            flash("You must provide a password.", "validate-password-error")
-            is_valid = False
-
-        if "confirm-password" not in data:
-            flash("You must provide a password confirmation.", "validate-password-error")
-            is_valid = False
-
-        # Form of data
+        if "current-password" in data:
+            data["password"] = data["current-password"]
+            new_password = False
+        else:
+            data["password"] = data["new-password"]
+            new_password = True
 
         if not data["username"].isalnum():
             flash("Username must not contain non-alphanumeric characters", "validate-username-error")
@@ -87,21 +110,23 @@ class User(ModelBase):
             flash("Email provided is not valid.", "validate-email-error")
             is_valid = False
 
-        if data["password"] != data["confirm-password"]:
-            flash("Password confirmation does not match!", "validate-password-error")
-            is_valid = False
+        if new_password:
+            if "confirm-password" not in data:
+                flash("You must provide a password confirmation.", "validate-password-error")
+                is_valid = False
+            elif data["password"] != data["confirm-password"]:
+                flash("Password confirmation does not match!", "validate-password-error")
+                is_valid = False
 
-        if len(data["password"]) < cls.password_min_length:
-            flash("Password must be at least 8 characters", "validate-password-error")
-            is_valid = False
+            if len(data["password"]) < cls.password_min_length:
+                flash("Password must be at least 8 characters", "validate-password-error")
+                is_valid = False
 
-        if not cls.is_strong_password(data["password"]):
-            flash("Your password is weak babysauce, only chad passwords allowed", "validate-password-error")
-            is_valid = False
+            if not cls.is_strong_password(data["password"]):
+                flash("Your password is weak babysauce, only chad passwords allowed", "validate-password-error")
+                is_valid = False
 
-        # Duplicates
-
-        if "id" not in data and cls.get_by_email(data["email"]) is not None:
+        if is_valid and "id" not in data and cls.get_by_email(data["email"]) is not None:
             flash(f"Email address {data['email']} is already in use, please login", "validate-email-error")
             is_valid = False
 
