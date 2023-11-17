@@ -77,6 +77,12 @@ class User(ModelBase):
         return cls(view[0]) if view else None
 
     @classmethod
+    def is_username_free(cls, username: str) -> bool:
+        query = f"SELECT COUNT(*) AS count FROM {cls.table} WHERE username = %(username)s;"
+        view = connectToMySQL(cls.db).query_db(query, {"username": username})
+        return view[0].get("count") == 0
+
+    @classmethod
     def authenticate_to_id(cls, data):
         target_user = cls.get_by_email(data["email"])
         if target_user is None:
@@ -128,9 +134,13 @@ class User(ModelBase):
                 flash("Your password is weak babysauce, only chad passwords allowed", "validate-password-error")
                 is_valid = False
 
-        if is_valid and "id" not in data and cls.get_by_email(data["email"]) is not None:
-            flash(f"Email address {data['email']} is already in use, please login", "validate-email-error")
-            is_valid = False
+        if is_valid and "id" not in data:
+            if cls.get_by_email(data["email"]) is not None:
+                flash(f"Email address {data['email']} is already in use, please login", "validate-email-error")
+                is_valid = False
+            elif not cls.is_username_free(data["username"]):
+                flash(f"Username {data['username']} is already in use, please login", "validate-name-error")
+                is_valid = False
 
         if not is_valid:
             session["redo"] = data
