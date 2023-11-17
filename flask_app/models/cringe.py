@@ -52,6 +52,7 @@ class Cringe(ModelBase):
             LEFT JOIN {ratings}
                 ON {ratings}.cringe_id = {cls.table}.id
             GROUP BY {cls.table}.id
+            ORDER BY {cls.table}.created_at DESC
         """
         view = connectToMySQL(cls.db).query_db(query)
 
