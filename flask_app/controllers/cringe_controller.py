@@ -1,4 +1,4 @@
-# from flask import redirect, session, render_template, flash, request
+from flask import redirect
 from flask_app.controllers.controller_base import ControllerBase
 from flask_app.models.cringe import Cringe
 from flask_app.config.policy import authorize_view
@@ -17,3 +17,8 @@ class CringeController(ControllerBase):
         data = {**form_data}
         data["user_id"] = user.id
         return super().create(data)
+
+    @authorize_view(as_owner=True)
+    def delete(self, id: int, **kwargs):
+        self.model.delete(id)
+        return redirect("/dashboard")
