@@ -56,8 +56,8 @@ header {
 .content {
   display: flex;
   justify-content: space-between;
-  max-width: var(--page-width);
   width: 100%;
+  max-width: var(--page-width);
   margin: auto;
 }
 
@@ -66,7 +66,6 @@ main {
   flex-direction: column;
   gap: 1em;
 
-  min-width: fit-content;
   margin: auto;
 
   & p {
@@ -248,7 +247,6 @@ ol, ul {
 
 .page {
   width: var(--page-width);
-  max-width: 100vw;
   min-width: 100%;
 }
 

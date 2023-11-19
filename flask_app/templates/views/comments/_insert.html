@@ -1,12 +1,12 @@
-<div class="wide row card" id="comment-{{ comment.id }}">
+<div class="row card" id="comment-{{ comment.id }}">
     <div class="column" style="gap:0; align-items: center;">
         <span>↑</span>
         <span>+69</span>
         <span>↓</span>
     </div>
-    <div class="wide column">
+    <div class="column" style="flex: 1;">
         <a class="short" href="/users/{{ comment.user_id }}"><h6>{{ comment.username }}</h6></a>
-        <p>{{ comment.content }}</p>
+        <p class="short">{{ comment.content }}</p>
         <span>
             <a
                 href="#comment-{{ comment.id }}"
@@ -26,4 +26,3 @@
 {% endfor %}
 </div>
 {% endif %}
-<div style="height: 1em;"></div>
