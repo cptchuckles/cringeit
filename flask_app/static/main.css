@@ -37,6 +37,8 @@ body {
 
   min-height: 90vh;
   min-width: 600px;
+
+  padding-bottom: 2rem;
 }
 
 header {
@@ -105,7 +107,7 @@ textarea, button, input, select {
   border: none;
   border-radius: var(--button-radius);
   padding: var(--button-padding);
-  resize: none;
+  resize: vertical;
 }
 
 button, .button {
