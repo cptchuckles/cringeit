@@ -1,6 +1,7 @@
 {% extends "layouts/main.html" %}
 {% block title %}{{ cringe.headline }} - CringeIt{% endblock %}
 {% block content -%}
+<script src="{{ url_for('static', filename='js/types/comment_reply_form.js') }}"></script>
 <style>
 .headline {
     font-size: 3rem;
@@ -84,5 +85,10 @@
         <a href="/cringe/{{ cringe.id }}/report">Report this</a>
     </div>
     {% include "/views/comments/_form.html" %}
+    <div class="wide column" style="gap: 0;">
+        {% for comment in cringe.comments|reverse %}
+        {% include "/views/comments/_insert.html" %}
+        {% endfor %}
+    </div>
 </main>
 {%- endblock %}

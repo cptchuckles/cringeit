@@ -23,7 +23,7 @@ class Comment(ModelBase):
             JOIN {users}
                 ON {cls.table}.user_id = {users}.id
             WHERE {cls.table}.cringe_id = %(cringe_id)s
-            ORDER BY {cls.table}.created_at DESC
+            ORDER BY {cls.table}.created_at ASC
         """
         view = connectToMySQL(cls.db).query_db(query, {"cringe_id": cringe_id})
 

@@ -13,7 +13,7 @@ class CommentController(ControllerBase):
         new_comment_id = self.model.create(form_data)
         if new_comment_id is False:
             flash("Comment could not be added for some reason", "error")
-        return redirect(f"/cringe/{ form_data.get('cringe_id') }")
+        return redirect(f"/cringe/{ form_data.get('cringe_id') }#comment-{ new_comment_id }")
 
     @authorize_action(as_owner=True, unauthorized_to="/cringe/<cringe_id>")
     def update(self, form_data, **kwargs):

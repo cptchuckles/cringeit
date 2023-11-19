@@ -1,0 +1,29 @@
+<div class="wide row card" id="comment-{{ comment.id }}">
+    <div class="column" style="gap:0; align-items: center;">
+        <span>↑</span>
+        <span>+69</span>
+        <span>↓</span>
+    </div>
+    <div class="wide column">
+        <a class="short" href="/users/{{ comment.user_id }}"><h6>{{ comment.username }}</h6></a>
+        <p>{{ comment.content }}</p>
+        <span>
+            <a
+                href="#comment-{{ comment.id }}"
+                onclick="showReplyForm(this, {{auth_user.id}}, {{cringe.id}}, {{comment.id}}, '{{comment.username}}')"
+            >
+                Reply
+            </a>
+        </span>
+    </div>
+</div>
+{% if comment.replies|count > 0 %}
+<div style="padding-left: 2.5rem; border-left: 2px solid var(--bg-light);">
+{% for reply in comment.replies %}
+    {% with comment = reply %}
+    {% include "/views/comments/_insert.html" %}
+    {% endwith %}
+{% endfor %}
+</div>
+{% endif %}
+<div style="height: 1em;"></div>
