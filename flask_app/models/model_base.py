@@ -23,7 +23,7 @@ class ModelBase:
                     data[key] = data[my_key]
 
         for field in cls.fields + cls.default_fields:
-            setattr(self, field, data[field])
+            setattr(self, field, data.get(field))
 
     @classmethod
     def get_all(cls):
@@ -38,7 +38,8 @@ class ModelBase:
         return cls(view[0]) if view else None
 
     @classmethod
-    def create(cls, data: dict):
+    def create(cls, form_data: dict):
+        data = {field: form_data.get(field) for field in cls.fields}
         prepared_fields = [f"%({field})s" for field in cls.fields]
         query = f"""
             INSERT INTO {cls.table}
