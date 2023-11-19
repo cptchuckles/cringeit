@@ -1,6 +1,5 @@
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app.models.model_base import ModelBase
-from flask_app.models import user, cringe_rating
 
 
 class Cringe(ModelBase):
@@ -19,7 +18,8 @@ class Cringe(ModelBase):
 
         query = f"""
             SELECT
-                *,
+                {cls.table}.*,
+                {users}.username AS username,
                 SUM(COALESCE({ratings}.delta, 0)) AS rating
             FROM {cls.table}
             JOIN {users}
@@ -33,7 +33,7 @@ class Cringe(ModelBase):
             return None
 
         item = cls(view[0])
-        setattr(item, "user", user.User(view[0]))
+        setattr(item, "username", view[0].get("username"))
         setattr(item, "rating", int(view[0].get("rating")))
 
         return item
@@ -45,7 +45,8 @@ class Cringe(ModelBase):
 
         query = f"""
             SELECT
-                *,
+                {cls.table}.*,
+                {users}.username AS username,
                 SUM(COALESCE({ratings}.delta, 0)) AS rating
             FROM {cls.table}
             JOIN {users}
@@ -60,7 +61,7 @@ class Cringe(ModelBase):
         items = []
         for row in view:
             item = cls(row)
-            setattr(item, "user", user.User(row))
+            setattr(item, "username", row.get("username"))
             setattr(item, "rating", row.get("rating"))
             items.append(item)
 
