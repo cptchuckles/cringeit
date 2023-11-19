@@ -1,57 +1,15 @@
 {% extends "layouts/main.html" %}
 {% block title %}{{ cringe.headline }} - CringeIt{% endblock %}
-{% block content -%}
+{% block sources %}
 <script src="{{ url_for('static', filename='js/types/comment_reply_form.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/cringe.css') }}" />
 <style>
-.headline {
-    font-size: 3rem;
-}
 .rating {
-    color: var(--fg-dark);
     background-color: {{ "#0da" if cringe.rating >= 0 else "purple" }};
-    font-size: 3.5rem;
-    padding: .1em .3em;
-    border-radius: .5rem;
-    /* box-shadow: 0 0 10px {{ "#0fd" if cringe.rating >= 0 else "#a05" }}; */
-}
-.cringe-url {
-    border: .15em solid var(--fg-dark);
-    border-radius: .15em;
-    background-color: #aaa;
-    padding: 2rem;
-    font-size: 2rem;
-    text-align: center;
-    & a {
-        color: #04a !important; target=
-    }
-}
-.button.rate {
-    padding: 1.5em;
-    font-size: 1.5rem;
-    width: 35%;
-    box-shadow: 5px 5px black;
-    &.plus:before {
-        display: inline-block;
-        width: 2ch;
-        height: 2ch;
-        margin-right: .5ch;
-        border: 4px solid var(--fg);
-        border-radius: 50%;
-    }
-    &.minus {
-        background-color: #737;
-        &:before {
-            content: "– ";
-            display: inline-block;
-            width: 2ch;
-            height: 2ch;
-            margin-right: .5ch;
-            border: 4px solid var(--fg);
-            border-radius: 50%;
-        }
-    }
 }
 </style>
+{% endblock %}
+{% block content -%}
 <main class="content column" style="gap: 2em;">
     <div class="wide row" style="align-items: stretch;">
         <div class="wide column" style="gap: 0; justify-content: space-between;">
