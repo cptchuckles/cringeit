@@ -4,13 +4,20 @@
     class="page column"
     style="gap: 2em;"
 >
-    <input type="text" name="headline" id="headline" style="font-size: 1.5em;" placeholder="Enter a Clickbait Cringe Headline" />
+    <input
+        type="text"
+        name="headline"
+        id="headline"
+        placeholder="Enter a Clickbait Cringe Headline"
+        style="font-size: 1.5em;"
+        required
+    />
     <div class="row">
         <label for="url">Source of Cringe URL:</label>
-        <input type="text" name="url" id="url" style="flex: 1; color: blue;" />
+        <input type="text" name="url" id="url" style="flex: 1; color: blue;" required />
     </div>
     <label for="description">Your Commentary or Description of Cringe</label>
-    <textarea name="description" id="description" rows="10"></textarea>
+    <textarea name="description" id="description" rows="10" required></textarea>
     <div class="row">
         <a href="/dashboard" class="left-arrow clear button">Cancel</a>
         <button class="plus">Post Cringe</button>
