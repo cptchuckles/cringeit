@@ -112,6 +112,7 @@ textarea, button, input, select {
 
 button, .button {
   display: inline-block;
+  text-align: center;
 
   font-weight: bold;
   text-decoration: none !important;
