@@ -29,7 +29,7 @@ class Cringe(ModelBase):
             WHERE {cls.table}.id = %(id)s
         """
         view = connectToMySQL(cls.db).query_db(query, {"id": id})
-        if not view:
+        if not view or view[0].get("id") is None:
             return None
 
         item = cls(view[0])
