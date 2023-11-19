@@ -33,6 +33,7 @@ class Cringe(ModelBase):
             return None
 
         item = cls(view[0])
+        setattr(item, "user", user.User(view[0]))
         setattr(item, "rating", int(view[0].get("rating")))
 
         return item
