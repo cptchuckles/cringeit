@@ -27,7 +27,7 @@
 .button.rate {
     padding: 1.5em;
     font-size: 1.5rem;
-    width: 40%;
+    width: 35%;
     box-shadow: 5px 5px black;
     &.plus:before {
         display: inline-block;
@@ -68,7 +68,7 @@
         <a href="{{ cringe.url }}">{{ cringe.url }}</a>
     </div>
     <p>{{ cringe.description }}</p>
-    <div class="wide row" style="width: 50%; margin: auto;">
+    <div class="wide row" style="width: 65%; margin: auto;">
         <a class="rate button plus">CRINGE</a>
         <a class="rate button minus">Boring</a>
     </div>
@@ -83,11 +83,6 @@
         </div>
         <a href="/cringe/{{ cringe.id }}/report">Report this</a>
     </div>
-    <form action="/comments/create" method="POST" class="wide column">
-        <input type="hidden" name="user_id" value="{{ auth_user.id }}" />
-        <input type="hidden" name="cringe_id" value="{{ cringe.id }}" />
-        <textarea name="content" id="content" rows="4" placeholder="Write a Comment"></textarea>
-        <button class="plus short">Submit</button>
-    </form>
+    {% include "/views/comments/_form.html" %}
 </main>
 {%- endblock %}
