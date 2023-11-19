@@ -18,6 +18,10 @@ class CringeController(ControllerBase):
         data["user_id"] = auth_user.id
         return super().create(data)
 
+    @authorize_action()
+    def show(self, id: int, **kwargs):
+        return super().show(id, **kwargs)
+
     @authorize_action(as_owner=True)
     def delete(self, id: int, **kwargs):
         self.model.delete(id)
