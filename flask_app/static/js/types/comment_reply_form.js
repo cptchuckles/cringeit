@@ -1,15 +1,16 @@
-function showReplyForm(anchor, userId, cringeId, parentCommentId, parentUsername) {
-    anchor.parentElement.appendChild(new CommentReplyForm(
-        userId,
+function showReplyForm(cringeId, parentCommentId, userId, parentUsername) {
+    const links = document.getElementById(`comment-links-${parentCommentId}`);
+    links.parentElement.appendChild(new CommentReplyForm(
         cringeId,
         parentCommentId,
+        userId,
         parentUsername,
-        anchor.cloneNode(true)
+        links.cloneNode(true)
     ));
-    anchor.remove();
+    links.remove();
 }
 
-function NewDOMTokenList(tokens) {
+function buildDOMTokenList(tokens) {
     const tokenList = document.createElement("div").classList;
     for (const token of tokens) {
         tokenList.add(token);
@@ -18,7 +19,7 @@ function NewDOMTokenList(tokens) {
 }
 
 class CommentReplyForm extends HTMLElement {
-    constructor(userId, cringeId, parentCommentId, parentUsername, cancelLink) {
+    constructor(cringeId, parentCommentId, userId, parentUsername, cancelLink) {
         super();
 
         this.userId = userId;
@@ -29,10 +30,15 @@ class CommentReplyForm extends HTMLElement {
     }
 
     connectedCallback() {
+        const abort = () => {
+            this.parentElement.appendChild(this.cancelLink);
+            this.remove();
+        };
+
         const form = Object.assign(document.createElement("form"), {
             action: "/comments/create",
             method: "POST",
-            classList: NewDOMTokenList(["wide", "column"])
+            classList: buildDOMTokenList(["wide", "column"])
         });
 
         form.appendChild(
@@ -59,39 +65,44 @@ class CommentReplyForm extends HTMLElement {
             })
         );
 
-        form.appendChild(
-            Object.assign(document.createElement("textarea"), {
-                name: "content",
-                rows: 4,
-                placeholder: `Reply to ${this.parentUsername}`
-            })
-        );
+        const textArea = Object.assign(document.createElement("textarea"), {
+            name: "content",
+            rows: 4,
+            placeholder: `Reply to ${this.parentUsername}`
+        });
+        textArea.addEventListener("keydown", ev => {
+            if (ev.shiftKey && ev.key === "Enter") {
+                ev.target.form.submit();
+            }
+            else if (ev.key === "Escape") {
+                abort();
+            }
+        });
+        form.appendChild(textArea);
 
         const buttonRow = Object.assign(document.createElement("div"), {
-            classList: NewDOMTokenList(["short", "row"])
+            classList: buildDOMTokenList(["short", "row"])
         });
 
         buttonRow.appendChild(
             Object.assign(document.createElement("button"), {
-                classList: NewDOMTokenList(["plus"]),
+                classList: buildDOMTokenList(["plus"]),
                 textContent: "Reply"
             })
         );
 
         const cancelButton = Object.assign(document.createElement("button"), {
             type: "button",
-            classList: NewDOMTokenList(["clear"]),
+            classList: buildDOMTokenList(["clear"]),
             textContent: "Cancel",
         });
-        cancelButton.addEventListener("click", () => {
-            this.parentElement.appendChild(this.cancelLink);
-            this.remove();
-        });
+        cancelButton.addEventListener("click", () => abort());
         buttonRow.appendChild(cancelButton);
 
         form.appendChild(buttonRow);
 
         this.appendChild(form);
+        textArea.focus();
     }
 }
 customElements.define("comment-reply-form", CommentReplyForm);
