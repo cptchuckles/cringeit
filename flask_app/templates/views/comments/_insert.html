@@ -1,8 +1,8 @@
-<div class="row card" id="comment-{{ comment.id }}">
-    <div class="column" style="gap:0; align-items: center;">
-        <span>↑</span>
-        <span>+69</span>
-        <span>↓</span>
+<div class="comment row card" id="comment-{{ comment.id }}">
+    <div class="column" style="gap: 0; align-items: center;">
+        <a href="/comments/{{ comment.id }}/rate-up" class="vote up-arrow"></a>
+        <span class="comment-rating">{{ comment.rating }}</span>
+        <a href="/comments/{{ comment.id }}/rate-down" class="vote down-arrow"></a>
     </div>
     <div class="column" style="flex: 1;">
         <h6 class="short">

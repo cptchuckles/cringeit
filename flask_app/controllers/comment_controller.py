@@ -2,12 +2,37 @@ from flask import redirect, flash
 from flask_app.config.policy import authorize_action
 from flask_app.controllers.controller_base import ControllerBase
 from flask_app.models.comment import Comment
+from flask_app.models.comment_rating import CommentRating
+from flask_app import app
 import re
 
 
 class CommentController(ControllerBase):
     def __init__(self):
         super().__init__(Comment)
+
+    def register_crud_routes(self):
+        super().register_crud_routes()
+
+        @app.route("/comments/<int:id>/rate-up", endpoint="comments/rate-up")
+        @authorize_action()
+        def rate_up(id: int, auth_user):
+            data = {"comment_id": id, "user_id": auth_user.id, "delta": 1}
+            result = CommentRating.rate_comment(data)
+            if result is False:
+                flash("Couldn't rate comment for some reason", "error")
+            comment = Comment.get_by_id(id)
+            return redirect(f"/cringe/{comment.cringe_id}#comment-{id}")
+
+        @app.route("/comments/<int:id>/rate-down", endpoint="comments/rate-down")
+        @authorize_action()
+        def rate_down(id: int, auth_user):
+            data = {"comment_id": id, "user_id": auth_user.id, "delta": -1}
+            result = CommentRating.rate_comment(data)
+            if result is False:
+                flash("Couldn't rate comment for some reason", "error")
+            comment = Comment.get_by_id(id)
+            return redirect(f"/cringe/{comment.cringe_id}#comment-{id}")
 
     @authorize_action()
     def create(self, form_data, **kwargs):

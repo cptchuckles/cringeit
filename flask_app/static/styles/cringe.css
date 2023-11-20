@@ -18,6 +18,24 @@
   border-radius: .5rem;
 }
 
+.comment .comment-rating {
+  margin: .5em 0;
+}
+.comment .vote {
+  display: block;
+  height: .6em;
+  width: .6em;
+  border-top: 3px solid var(--fg);
+  border-left: 3px solid var(--fg);
+
+  &.up-arrow {
+    transform: rotate(45deg);
+  }
+  &.down-arrow {
+    transform: rotate(-135deg);
+  }
+}
+
 .cringe-url {
   border: .15em solid var(--fg-dark);
   border-radius: .15em;
