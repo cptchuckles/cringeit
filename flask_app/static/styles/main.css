@@ -73,8 +73,8 @@ main {
   }
 }
 
-h1, h2, h3, h4, h5, h6 {
-  color: var(--fg-heading);
+h1, h2, h3, h4, h5, h6, h6 > a {
+  color: var(--fg-heading) !important;
 }
 
 hr {
@@ -83,7 +83,12 @@ hr {
 }
 
 a:not(.button) {
-  color: var(--fg) !important;
+  color: var(--fg);
+  &:visited {
+    color: var(--fg);
+  }
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 form {
@@ -242,6 +247,10 @@ ol, ul {
   box-shadow: 0px 5px 10px black;
   & h1 {
     margin-bottom: 1em;
+  }
+
+  &:target {
+    background-color: var(--bg-light);
   }
 }
 
