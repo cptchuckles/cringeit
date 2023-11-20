@@ -20,6 +20,11 @@ class CringeRating(ModelBase):
         return connectToMySQL(cls.db).query_db(query, data)
 
     @classmethod
+    def rate_cringe_by_user(cls, data):
+        query = "CALL UpsertCringeRating(%(cringe_id)s, %(user_id)s, %(delta)s)"
+        return connectToMySQL(cls.db).query_db(query, data)
+
+    @classmethod
     def delete_rating_for_cringe_by_user(cls, cringe_id: int, user_id: int):
         query = f"""
             DELETE FROM {cls.table}
