@@ -2,6 +2,7 @@ from flask import redirect, flash
 from flask_app.config.policy import authorize_action
 from flask_app.controllers.controller_base import ControllerBase
 from flask_app.models.comment import Comment
+import re
 
 
 class CommentController(ControllerBase):
@@ -10,10 +11,12 @@ class CommentController(ControllerBase):
 
     @authorize_action()
     def create(self, form_data, **kwargs):
-        new_comment_id = self.model.create(form_data)
+        data = {**form_data}
+        data["content"] = re.sub(r"(\s){2,}", r"\1\1", data["content"])
+        new_comment_id = self.model.create(data)
         if new_comment_id is False:
             flash("Comment could not be added for some reason", "error")
-        return redirect(f"/cringe/{ form_data.get('cringe_id') }#comment-{ new_comment_id }")
+        return redirect(f"/cringe/{ data.get('cringe_id') }#comment-{ new_comment_id }")
 
     @authorize_action(as_owner=True, unauthorized_to="/cringe/[cringe_id]")
     def update(self, form_data, **kwargs):
