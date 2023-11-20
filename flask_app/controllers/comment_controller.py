@@ -29,4 +29,9 @@ class CommentController(ControllerBase):
         status = self.model.delete(id)
         if status is False:
             flash("Comment could not be deleted for some reason", "error")
-        return redirect(f"/cringe/{kwargs['comment'].cringe_id}")
+        comment = kwargs["comment"]
+        if comment.parent_comment_id is not None:
+            parent_comment = f"#comment-{comment.parent_comment_id}"
+        else:
+            parent_comment = ""
+        return redirect(f"/cringe/{kwargs['comment'].cringe_id}" + parent_comment)
