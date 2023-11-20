@@ -37,5 +37,6 @@ class Comment(ModelBase):
         for item in items.values():
             if item.parent_comment_id is not None:
                 items[item.parent_comment_id].replies.append(item)
+                setattr(item, "parent_comment_username", items[item.parent_comment_id].username)
 
         return [item for item in items.values() if item.parent_comment_id is None]
