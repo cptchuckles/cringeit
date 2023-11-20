@@ -4,22 +4,31 @@
     class="page column"
     style="gap: 2em;"
 >
+    {% if cringe is defined and cringe.id is defined %}
+    <input type="hidden" name="id" value="{{ cringe.id }}" />
+    <input type="hidden" name="user_id" value="{{ cringe.user_id }}" />
+    {% endif -%}
     <input
         type="text"
         name="headline"
         id="headline"
         placeholder="Enter a Clickbait Cringe Headline"
         style="font-size: 1.5em;"
+        {%- if cringe is defined %}value="{{ cringe.headline }}"{% endif -%}
         required
     />
     <div class="row">
         <label for="url">Source of Cringe URL:</label>
-        <input type="text" name="url" id="url" style="flex: 1; color: blue;" required />
+        <input type="text" name="url" id="url" style="flex: 1; color: blue;" {% if cringe is defined %}value="{{ cringe.url }}"{% endif %} required />
     </div>
     <label for="description">Your Commentary or Description of Cringe</label>
-    <textarea name="description" id="description" rows="10" required></textarea>
+    <textarea name="description" id="description" rows="10" required>{%- if cringe is defined %}{{ cringe.description }}{% endif %}</textarea>
     <div class="row">
         <a href="/dashboard" class="left-arrow clear button">Cancel</a>
+        {% if cringe is defined and cringe.id is defined %}
+        <button>Update Cringe</button>
+        {% else -%}
         <button class="plus">Post Cringe</button>
+        {% endif -%}
     </div>
 </form>
