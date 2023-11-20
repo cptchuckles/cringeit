@@ -27,6 +27,10 @@ class CringeController(ControllerBase):
         return super().edit(id, **kwargs)
 
     @authorize_action(as_owner=True)
+    def update(self, form_data, **kwargs):
+        return super().update(form_data)
+
+    @authorize_action(as_owner=True)
     def delete(self, id: int, **kwargs):
         self.model.delete(id)
         return redirect("/dashboard")
