@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/cringe.css') }}" />
 <style>
 .rating {
-    background-color: {{ "#0da" if cringe.rating >= 0 else "purple" }};
+    background-color: {{ "var(--bg-positive)" if cringe.rating >= 0 else "var(--bg-negative)" }};
 }
 </style>
 {% endblock %}

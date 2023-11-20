@@ -1,9 +1,18 @@
+:root {
+  --cringe-url-bg: #aaa;
+  --cringe-url-fg: #04a;
+  --vote-plus-bg: var(--plus-button);
+  --vote-minus-bg: #737;
+}
+
 .headline {
   font-size: 3rem;
 }
 
 .rating {
-  color: var(--fg-dark);
+  --bg-positive: #0da;
+  --bg-negative: purple;
+  color: var(--fg-dark) !important;
   font-size: 3.5rem;
   padding: .1em .3em;
   border-radius: .5rem;
@@ -12,13 +21,13 @@
 .cringe-url {
   border: .15em solid var(--fg-dark);
   border-radius: .15em;
-  background-color: #aaa;
+  background-color: var(--cringe-url-bg);
   padding: 2rem;
   font-size: 2rem;
   text-align: center;
 
   & a {
-    color: #04a !important;
+    color: var(--cringe-url-fg) !important;
   }
 }
 
@@ -29,6 +38,7 @@
   box-shadow: 5px 5px black;
 
   &.plus:before {
+    background-color: var(--vote-plus-bg);
     display: inline-block;
     width: 2ch;
     height: 2ch;
@@ -38,7 +48,7 @@
   }
 
   &.minus {
-    background-color: #737;
+    background-color: var(--vote-minus-bg);
     &:before {
       content: "– ";
       display: inline-block;
