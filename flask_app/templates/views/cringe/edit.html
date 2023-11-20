@@ -1,0 +1,8 @@
+{% extends "layouts/main.html" %}
+{% block title %}Edit Cringe{% endblock %}
+{% block content -%}
+<main class="content column">
+    {% include "layouts/_flash_messages.html" %}
+    {% include "views/cringe/_form.html" %}
+</main>
+{%- endblock %}
