@@ -6,7 +6,8 @@
   --fg-heading: #de8;
 
   --fg-flash: #000;
-  --bg-flash-danger: #fa4;
+  --fg-flash-danger: #fff;
+  --bg-flash-danger: #f40;
   --bg-flash-success: #475;
 
   --bg: #333;
@@ -228,6 +229,7 @@ ol, ul {
   }
 
   &.danger {
+    color: var(--fg-flash-danger);
     background-color: var(--bg-flash-danger);
     font-style: oblique;
     font-weight: bold;
