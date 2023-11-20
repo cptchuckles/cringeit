@@ -15,12 +15,16 @@
         </h6>
         <p class="short" style="max-width: 100%; white-space: pre-line; word-wrap: break-word; margin: 1em 0;" id="comment-content-{{ comment.id }}">{{ comment.content }}</p>
         <span>
-            <a
-                href="#comment-{{ comment.id }}"
-                onclick="showReplyForm(this, {{auth_user.id}}, {{cringe.id}}, {{comment.id}}, '{{comment.username}}')"
-            >
-                Reply
-            </a>
+            <span class="short row" style="font-size: .8em;" id="comment-links-{{ comment.id }}">
+                <a onclick="showReplyForm(
+                    {{- cringe.id }},
+                    {{- comment.id }},
+                    {{- auth_user.id }},'{{ comment.username }}')">Reply</a>
+                {%- if auth_user.id == comment.user_id -%}
+                <a onclick="editReply()">Edit</a>
+                <a href="/comments/{{ comment.id}}/delete">Delete</a>
+                {%- endif %}
+            </span>
         </span>
     </div>
 </div>
