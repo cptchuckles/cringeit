@@ -5,8 +5,15 @@
         <span>↓</span>
     </div>
     <div class="column" style="flex: 1;">
-        <a class="short" href="/users/{{ comment.user_id }}"><h6>{{ comment.username }}</h6></a>
-        <p class="short">{{ comment.content }}</p>
+        <h6 class="short">
+            <a href="/users/{{ comment.user_id }}">
+                {{- comment.username }}</a>{%- if comment.parent_comment_username is defined -%},
+            replying to
+            <a href="#comment-{{ comment.parent_comment_id }}">
+                {{- comment.parent_comment_username }}</a>
+            {%- endif %}
+        </h6>
+        <p class="short" style="max-width: 100%; white-space: pre-line; word-wrap: break-word; margin: 1em 0;" id="comment-content-{{ comment.id }}">{{ comment.content }}</p>
         <span>
             <a
                 href="#comment-{{ comment.id }}"
