@@ -29,7 +29,7 @@
     </div>
 </div>
 {% if comment.replies|count > 0 %}
-<div style="padding-left: 2.5rem; border-left: 2px solid var(--bg-light);">
+<div style="padding-left: 2.5rem; border-left: 2px solid var(--bg-light); border-bottom-left-radius: 4em;">
 {% for reply in comment.replies %}
     {% with comment = reply %}
     {% include "/views/comments/_insert.html" %}
