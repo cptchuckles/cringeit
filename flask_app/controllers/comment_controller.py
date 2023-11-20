@@ -15,8 +15,15 @@ class CommentController(ControllerBase):
             flash("Comment could not be added for some reason", "error")
         return redirect(f"/cringe/{ form_data.get('cringe_id') }#comment-{ new_comment_id }")
 
-    @authorize_action(as_owner=True, unauthorized_to="/cringe/<cringe_id>")
+    @authorize_action(as_owner=True, unauthorized_to="/cringe/[cringe_id]")
     def update(self, form_data, **kwargs):
         if not self.model.update(form_data):
             flash("Comment could not be modified for some reason", "error")
         return redirect(f"/cringe/{ form_data.get('cringe_id') }")
+
+    @authorize_action(as_owner=True, unauthorized_to="/cringe/:cringe_id")
+    def delete(self, id: int, **kwargs):
+        status = self.model.delete(id)
+        if status is False:
+            flash("Comment could not be deleted for some reason", "error")
+        return redirect(f"/cringe/{kwargs['comment'].cringe_id}")
