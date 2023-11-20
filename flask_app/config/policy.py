@@ -3,7 +3,7 @@ from flask_app.models.user import User
 
 
 def get_value(obj, key: str):
-    return obj.get(key) if isinstance(obj, dict) else obj
+    return int(obj.get(key)) if isinstance(obj, dict) else obj
 
 
 def parse_property_parameter(item, route: str) -> str:
