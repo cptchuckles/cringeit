@@ -18,21 +18,32 @@
   border-radius: .5rem;
 }
 
-.comment .comment-rating {
-  margin: .5em 0;
+.pre-space {
+  white-space: pre-line;
+  word-wrap: break-word;
 }
-.comment .vote {
-  display: block;
-  height: .6em;
-  width: .6em;
-  border-top: 3px solid var(--fg);
-  border-left: 3px solid var(--fg);
 
-  &.up-arrow {
-    transform: rotate(45deg);
+.comment {
+  & .content {
+    max-width: 100%;
+    margin: 1em 0;
   }
-  &.down-arrow {
-    transform: rotate(-135deg);
+  & .comment-rating {
+    margin: .5em 0;
+  }
+  & .vote {
+    display: block;
+    height: .6em;
+    width: .6em;
+    border-top: 3px solid var(--fg);
+    border-left: 3px solid var(--fg);
+
+    &.up-arrow {
+      transform: rotate(45deg);
+    }
+    &.down-arrow {
+      transform: rotate(-135deg);
+    }
   }
 }
 

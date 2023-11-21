@@ -13,7 +13,7 @@
                 {{- comment.parent_comment_username }}</a>
             {%- endif %}
         </h6>
-        <p class="short" style="max-width: 100%; white-space: pre-line; word-wrap: break-word; margin: 1em 0;" id="comment-content-{{ comment.id }}">{{ comment.content }}</p>
+        <p class="short content pre-space" id="comment-content-{{ comment.id }}">{{ comment.content }}</p>
         <span>
             <span class="short row" style="font-size: .8em;" id="comment-links-{{ comment.id }}">
                 <a onclick="showReplyForm(
