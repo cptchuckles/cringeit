@@ -24,10 +24,12 @@
     <label for="description">Your Commentary or Description of Cringe</label>
     <textarea name="description" id="description" rows="10" required>{%- if cringe is defined %}{{ cringe.description }}{% endif %}</textarea>
     <div class="row">
-        <a href="/dashboard" class="left-arrow clear button">Cancel</a>
         {% if cringe is defined and cringe.id is defined %}
+        <a href="/cringe/{{ cringe.id }}" class="left-arrow clear button">Cancel</a>
+        <a href="/cringe/{{ cringe.id }}/delete" class="danger button">Delet This</a>
         <button>Update Cringe</button>
         {% else -%}
+        <a href="/dashboard" class="left-arrow clear button">Cancel</a>
         <button class="plus">Post Cringe</button>
         {% endif -%}
     </div>
