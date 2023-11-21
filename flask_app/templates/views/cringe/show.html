@@ -52,5 +52,17 @@
         {% include "/views/comments/_insert.html" %}
         {% endfor %}
     </div>
+    <hr>
+    <div class="wide row">
+        <div style="flex: 1;">
+            <a href="/dashboard" class="clear left-arrow button">Return to CringeFeed</a>
+        </div>
+        <div style="flex: 1; text-align: center;">
+            <a href="#top" class="clear button">Scroll to Top</a>
+        </div>
+        <div style="flex: 1; text-align: right;">
+            <a href="/cringe/{{ cringe.id }}/report">Report this</a>
+        </div>
+    </div>
 </main>
 {%- endblock %}

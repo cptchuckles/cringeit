@@ -9,7 +9,7 @@
     </head>
     <body>
         {% block header -%}
-        <header>
+        <header id="top">
             {%- if auth_user is defined and auth_user.id is defined -%}
             <div class="content wide row">
                 <h1><a href="/dashboard" style="text-decoration: none; color: var(--fg-heading) !important;">CringeIt®™</a></h1>
