@@ -72,6 +72,7 @@ class CommentReplyForm extends HTMLElement {
         });
         textArea.addEventListener("keydown", ev => {
             if (ev.shiftKey && ev.key === "Enter") {
+                ev.preventDefault();
                 ev.target.form.submit();
             }
             else if (ev.key === "Escape") {
