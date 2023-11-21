@@ -14,25 +14,26 @@ class CommentController(ControllerBase):
     def register_crud_routes(self):
         super().register_crud_routes()
 
-        @app.route("/comments/<int:id>/rate-up", endpoint="comments/rate-up")
-        @authorize_action()
-        def rate_up(id: int, auth_user):
-            data = {"comment_id": id, "user_id": auth_user.id, "delta": 1}
+        def rate_comment(comment_id: int, user_id: int, delta: int):
+            data = {"comment_id": comment_id, "user_id": user_id, "delta": delta}
             result = CommentRating.rate_comment(data)
             if result is False:
                 flash("Couldn't rate comment for some reason", "error")
-            comment = Comment.get_by_id(id)
-            return redirect(f"/cringe/{comment.cringe_id}#comment-{id}")
+            comment = Comment.get_by_id(comment_id)
+            if comment is None:
+                flash("Comment not found", "error")
+                return redirect("/dashboard")
+            return redirect(f"/cringe/{comment.cringe_id}#comment-{comment_id}")
+
+        @app.route("/comments/<int:id>/rate-up", endpoint="comments/rate-up")
+        @authorize_action()
+        def rate_up(id: int, auth_user):
+            return rate_comment(id, auth_user.id, 1)
 
         @app.route("/comments/<int:id>/rate-down", endpoint="comments/rate-down")
         @authorize_action()
         def rate_down(id: int, auth_user):
-            data = {"comment_id": id, "user_id": auth_user.id, "delta": -1}
-            result = CommentRating.rate_comment(data)
-            if result is False:
-                flash("Couldn't rate comment for some reason", "error")
-            comment = Comment.get_by_id(id)
-            return redirect(f"/cringe/{comment.cringe_id}#comment-{id}")
+            return rate_comment(id, auth_user.id, -1)
 
     @authorize_action()
     def create(self, form_data, **kwargs):
