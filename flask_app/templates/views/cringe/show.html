@@ -16,8 +16,15 @@
         <div class="wide column" style="gap: 0; justify-content: space-between;">
             <h1 class="headline">{{ cringe.headline }}</h1>
             <p style="margin: 0;">
-                Posted by <a href="/users/{{ cringe.user_id }}">{{ cringe.username }}</a>
-                on {{ cringe.created_at.strftime("%d %b, %Y") }}
+                <span>
+                    Posted by <a href="/users/{{ cringe.user_id }}">{{ cringe.username }}</a>
+                    on {{ cringe.created_at.strftime("%d %b, %Y") }}
+                </span>
+                {% if auth_user.id == cringe.user_id or auth_user.is_admin == 1 %}
+                <span style="border-left: 1px solid var(--fg); padding-left: 1em; margin-left: 1em;">
+                    <a href="/cringe/{{ cringe.id }}/edit">Edit</a>
+                </span>
+                {% endif %}
             </p>
         </div>
         <h1 class="rating">
@@ -27,7 +34,7 @@
     <div class="cringe-url">
         <a href="{{ cringe.url }}">{{ cringe.url }}</a>
     </div>
-    <p>{{ cringe.description }}</p>
+    <p class="pre-space" style="font-size: 1.2em;">{{ cringe.description }}</p>
     <div class="wide row" style="width: 65%; margin: auto;">
         <a href="/cringe/{{ cringe.id }}/rate-cringe" class="rate button plus">CRINGE</a>
         <a href="/cringe/{{ cringe.id }}/rate-boring" class="rate button minus">Boring</a>
@@ -36,10 +43,6 @@
     <div class="wide row">
         <div class="short row">
             <a href="/dashboard" class="clear left-arrow button">Return to CringeFeed</a>
-            {% if auth_user.id == cringe.user_id or auth_user.is_admin == 1 %}
-            <a href="/cringe/{{ cringe.id }}/edit" class="button">Edit</a>
-            <a href="/cringe/{{ cringe.id }}/delete" class="danger button">Delete</a>
-            {% endif %}
         </div>
         <a href="/cringe/{{ cringe.id }}/report">Report this</a>
     </div>
