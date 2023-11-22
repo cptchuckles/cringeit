@@ -1,3 +1,10 @@
+function submitOnEnter(event) {
+    if (event.shiftKey && event.key === "Enter") {
+        event.preventDefault();
+        event.target.form.submit();
+    }
+}
+
 function editComment(cringeId, commentId) {
     const commentBody = document.querySelector(`#comment-${commentId} .comment-body`);
     const content = commentBody.querySelector(".content").textContent;
