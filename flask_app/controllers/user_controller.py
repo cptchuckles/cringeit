@@ -1,4 +1,4 @@
-from flask import redirect, session, render_template, flash, request
+from flask import redirect, session, render_template, flash, request, abort
 from flask_app.config.policy import authorize_action
 from flask_app.controllers.controller_base import ControllerBase
 from flask_app.models.user import User
@@ -54,7 +54,18 @@ class UserController(ControllerBase):
 
     @authorize_action()
     def show(self, id: int, **kwargs):
-        return super().show(id, **kwargs)
+        auth_user = kwargs.get("auth_user")
+        user = auth_user if id == auth_user.id else self.model.get_by_id(id)
+        if user is None:
+            return abort(404)
+
+        all_cringe = Cringe.get_all_by_user(auth_user.id)
+        setattr(user, "total_cringe", sum(cringe.rating for cringe in all_cringe))
+
+        kwargs["user"] = user
+        kwargs["all_cringe"] = all_cringe
+
+        return render_template(f"/views/{self.model_name}/show.html", **kwargs)
 
     @authorize_action(as_self=True)
     def edit(self, id: int, **kwargs):

@@ -68,3 +68,33 @@ class Cringe(ModelBase):
             items.append(item)
 
         return items
+
+    @classmethod
+    def get_all_by_user(cls, user_id: int):
+        users = user.User.table
+        ratings = cringe_rating.CringeRating.table
+
+        query = f"""
+            SELECT
+                {cls.table}.*,
+                {users}.username AS username,
+                SUM(COALESCE({ratings}.delta, 0)) AS rating
+            FROM {cls.table}
+            JOIN {users}
+                ON {cls.table}.user_id = {users}.id
+            LEFT JOIN {ratings}
+                ON {ratings}.cringe_id = {cls.table}.id
+            WHERE {cls.table}.user_id = %(user_id)s
+            GROUP BY {cls.table}.id, {cls.table}.user_id
+            ORDER BY {cls.table}.created_at DESC
+        """
+        view = connectToMySQL(cls.db).query_db(query, {"user_id": user_id})
+
+        items = []
+        for row in view:
+            item = cls(row)
+            setattr(item, "username", row.get("username"))
+            setattr(item, "rating", row.get("rating"))
+            items.append(item)
+
+        return items

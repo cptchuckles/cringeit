@@ -3,16 +3,24 @@
 {% block content -%}
 <main class="content column">
     {% include "layouts/_flash_messages.html" %}
-    <h1>{{ user.username }}</h1>
-    <ul>
-        <li>Email address: {{ user.email }}</li>
-        <li>Joined: {{ user.created_at }}</li>
-    </ul>
-    <div class="short row">
-        <a href="/dashboard" class="button">Home</a>
-        {% if auth_user.id == user.id or auth_user.is_admin %}
-        <a href="/users/{{ user.id }}/edit" class="button">Edit Profile</a>
-        {% endif %}
+    <div class="wide row">
+        <div class="column">
+            <h1>{{ user.username }}</h1>
+            {% if auth_user.id == user.id or auth_user.is_admin %}
+            <a href="/users/{{ user.id }}/edit">Edit Profile</a>
+            {% endif %}
+        </div>
+        <div class="column">
+            <span>Email address: {{ user.email }}</span>
+            <span>Joined: {{ user.created_at }}</span>
+        </div>
+    </div>
+    <hr>
+    <div class="wide column">
+        <h2>Total Cringe: {{ "+" if user.total_cringe >= 0 }}{{ user.total_cringe }}</h2>
+        {% for cringe in all_cringe %}
+        {% include "/views/cringe/_insert.html" %}
+        {% endfor %}
     </div>
 </main>
 {%- endblock %}
