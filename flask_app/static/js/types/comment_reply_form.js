@@ -119,7 +119,7 @@ class CommentForm extends HTMLElement {
             }
         });
         if (this.content !== undefined ) {
-            textArea.textContent = this.content;
+            textArea.value = this.content;
         }
         if (this.editForm) {
             textArea.style.marginTop = "1em";
@@ -149,6 +149,7 @@ class CommentForm extends HTMLElement {
 
         this.appendChild(form);
         textArea.focus();
+        textArea.setSelectionRange(textArea.value.length, textArea.value.length);
     }
 }
 customElements.define("comment-form", CommentForm);
