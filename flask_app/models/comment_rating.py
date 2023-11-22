@@ -1,5 +1,6 @@
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app.models.model_base import ModelBase
+from flask_app.models import user, comment
 
 
 class CommentRating(ModelBase):
@@ -31,3 +32,19 @@ class CommentRating(ModelBase):
             WHERE comment_id = %(comment_id)s AND user_id = %(user_id)s
         """
         return connectToMySQL(cls.db).query_db(query, {"comment_id": comment_id, "user_id": user_id})
+
+    @classmethod
+    def get_sum_for_user(cls, user_id: int):
+        users = user.User.table
+        comments = comment.Comment.table
+        query = f"""
+            SELECT COALESCE(SUM({cls.table}.delta), 0) AS total_ratings
+            FROM {cls.table}
+            JOIN {comments}
+                ON {comments}.id = {cls.table}.comment_id
+            JOIN {users}
+                ON {users}.id = {comments}.user_id
+            WHERE {comments}.user_id = %(user_id)s
+        """
+        view = connectToMySQL(cls.db).query_db(query, {"user_id": user_id})
+        return int(view[0].get("total_ratings"))

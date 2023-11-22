@@ -3,6 +3,7 @@ from flask_app.config.policy import authorize_action
 from flask_app.controllers.controller_base import ControllerBase
 from flask_app.models.user import User
 from flask_app.models.cringe import Cringe
+from flask_app.models.comment_rating import CommentRating
 from flask_app import app
 
 
@@ -60,7 +61,9 @@ class UserController(ControllerBase):
             return abort(404)
 
         all_cringe = Cringe.get_all_by_user(user.id)
-        setattr(user, "total_cringe", sum(cringe.rating for cringe in all_cringe))
+        total_cringe_ratings = sum(cringe.rating for cringe in all_cringe)
+        total_comment_ratings = CommentRating.get_sum_for_user(id)
+        setattr(user, "total_cringe", total_cringe_ratings + total_comment_ratings)
 
         kwargs["user"] = user
         kwargs["all_cringe"] = all_cringe
