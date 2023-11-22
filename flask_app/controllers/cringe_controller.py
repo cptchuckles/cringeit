@@ -4,6 +4,7 @@ from flask_app.controllers.controller_base import ControllerBase
 from flask_app.models.cringe_rating import CringeRating
 from flask_app.models.cringe import Cringe
 from flask_app import app
+import re
 
 
 class CringeController(ControllerBase):
@@ -38,6 +39,7 @@ class CringeController(ControllerBase):
     @authorize_action()
     def create(self, form_data, auth_user):
         data = {**form_data}
+        data["description"] = re.sub(r"(\s){2,}", r"\1\1", data["description"])
         data["user_id"] = auth_user.id
         return super().create(data)
 
@@ -51,7 +53,9 @@ class CringeController(ControllerBase):
 
     @authorize_action(as_owner=True)
     def update(self, form_data, **kwargs):
-        return super().update(form_data)
+        data = {**form_data}
+        data["description"] = re.sub(r"(\s){2,}", r"\1\1", data["description"])
+        return super().update(data)
 
     @authorize_action(as_owner=True)
     def delete(self, id: int, **kwargs):
