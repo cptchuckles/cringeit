@@ -1,5 +1,7 @@
 <div class="wide row card" style="align-items: center;">
-    <div class="short"><h2>{% if cringe.rating >= 0 %}+{% endif %}{{ cringe.rating }}</h2></div>
+    <div class="short">
+        <h2 style="color: var({{ '--cringe-minus' if cringe.rating < 0 else '--fg-heading' }})">{{ "+" if cringe.rating >= 0 }}{{ cringe.rating }}</h2>
+    </div>
     <div class="wide column">
         <h3><a href="/cringe/{{ cringe.id }}">{{ cringe.headline }}</a></h3>
         <span>{{ cringe.created_at.strftime('%d %b, %Y') }}</span>

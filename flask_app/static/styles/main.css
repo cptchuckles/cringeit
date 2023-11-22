@@ -10,6 +10,9 @@
   --bg-flash-danger: #f40;
   --bg-flash-success: #475;
 
+  --cringe-plus: var(--plus-button);
+  --cringe-minus: #737;
+
   --bg: #333;
   --bg-light: #444;
 
@@ -75,7 +78,7 @@ main {
 }
 
 h1, h2, h3, h4, h5, h6, h6 > a {
-  color: var(--fg-heading) !important;
+  color: var(--fg-heading);
 }
 
 hr {

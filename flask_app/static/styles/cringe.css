@@ -1,8 +1,6 @@
 :root {
   --cringe-url-bg: #aaa;
   --cringe-url-fg: #04a;
-  --vote-plus-bg: var(--plus-button);
-  --vote-minus-bg: #737;
 }
 
 .headline {
@@ -67,7 +65,7 @@
   box-shadow: 5px 5px black;
 
   &.plus:before {
-    background-color: var(--vote-plus-bg);
+    background-color: var(--cringe-plus);
     display: inline-block;
     width: 2ch;
     height: 2ch;
@@ -77,7 +75,7 @@
   }
 
   &.minus {
-    background-color: var(--vote-minus-bg);
+    background-color: var(--cringe-minus);
     &:before {
       content: "– ";
       display: inline-block;
