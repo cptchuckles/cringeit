@@ -1,12 +1,24 @@
-function showReplyForm(cringeId, parentCommentId, userId, parentUsername) {
-    const links = document.getElementById(`comment-links-${parentCommentId}`);
-    links.parentElement.appendChild(new CommentReplyForm(
-        cringeId,
-        parentCommentId,
-        userId,
-        parentUsername,
-        links.cloneNode(true)
-    ));
+function editComment(cringeId, commentId) {
+    const commentBody = document.querySelector(`#comment-${commentId} .comment-body`);
+    const content = commentBody.querySelector(".content").textContent;
+    const editForm = new CommentForm(commentBody.cloneNode(true), {
+        commentId: commentId,
+        cringeId: cringeId,
+        content: content,
+        editForm: true,
+    });
+    commentBody.parentElement.appendChild(editForm);
+    commentBody.remove();
+}
+
+function showReplyForm(links, cringeId, parentCommentId, userId, parentUsername) {
+    const replyForm = new CommentForm(links.cloneNode(true), {
+        cringeId: cringeId,
+        userId: userId,
+        parentCommentId: parentCommentId,
+        parentUsername: parentUsername,
+    });
+    links.parentElement.appendChild(replyForm);
     links.remove();
 }
 
@@ -18,52 +30,72 @@ function buildDOMTokenList(tokens) {
     return tokenList;
 }
 
-class CommentReplyForm extends HTMLElement {
-    constructor(cringeId, parentCommentId, userId, parentUsername, cancelLink) {
+class CommentForm extends HTMLElement {
+    constructor(hiddenElement, params = {}) {
         super();
 
-        this.userId = userId;
-        this.cringeId = cringeId;
-        this.parentCommentId = parentCommentId;
-        this.parentUsername = parentUsername;
-        this.cancelLink = cancelLink;
+        this.hiddenElement = hiddenElement;
+        this.editForm = params.editForm;
+
+        this.userId = params.userId;
+        this.cringeId = params.cringeId;
+        this.commentId = params.commentId;
+        this.parentCommentId = params.parentCommentId;
+        this.parentUsername = params.parentUsername;
+        this.content = params.content;
     }
 
     connectedCallback() {
         const abort = () => {
-            this.parentElement.appendChild(this.cancelLink);
+            this.parentElement.appendChild(this.hiddenElement);
             this.remove();
         };
 
         const form = Object.assign(document.createElement("form"), {
-            action: "/comments/create",
+            action: `/comments/${this.editForm ? "update" : "create"}`,
             method: "POST",
             classList: buildDOMTokenList(["wide", "column"])
         });
 
-        form.appendChild(
-            Object.assign(document.createElement("input"), {
-                type: "hidden",
-                name: "user_id",
-                value: this.userId
-            })
-        );
+        if (this.commentId !== undefined) {
+            form.appendChild(
+                Object.assign(document.createElement("input"), {
+                    type: "hidden",
+                    name: "id",
+                    value: this.commentId,
+                })
+            );
+        }
 
-        form.appendChild(
-            Object.assign(document.createElement("input"), {
-                type: "hidden",
-                name: "cringe_id",
-                value: this.cringeId
-            })
-        );
+        if (this.userId !== undefined) {
+            form.appendChild(
+                Object.assign(document.createElement("input"), {
+                    type: "hidden",
+                    name: "user_id",
+                    value: this.userId
+                })
+            );
+        }
 
-        form.appendChild(
-            Object.assign(document.createElement("input"), {
-                type: "hidden",
-                name: "parent_comment_id",
-                value: this.parentCommentId
-            })
-        );
+        if (this.cringeId !== undefined) {
+            form.appendChild(
+                Object.assign(document.createElement("input"), {
+                    type: "hidden",
+                    name: "cringe_id",
+                    value: this.cringeId
+                })
+            );
+        }
+
+        if (this.parentCommentId !== undefined) {
+            form.appendChild(
+                Object.assign(document.createElement("input"), {
+                    type: "hidden",
+                    name: "parent_comment_id",
+                    value: this.parentCommentId
+                })
+            );
+        }
 
         const textArea = Object.assign(document.createElement("textarea"), {
             name: "content",
@@ -79,6 +111,12 @@ class CommentReplyForm extends HTMLElement {
                 abort();
             }
         });
+        if (this.content !== undefined ) {
+            textArea.textContent = this.content;
+        }
+        if (this.editForm) {
+            textArea.style.marginTop = "1em";
+        }
         form.appendChild(textArea);
 
         const buttonRow = Object.assign(document.createElement("div"), {
@@ -106,4 +144,4 @@ class CommentReplyForm extends HTMLElement {
         textArea.focus();
     }
 }
-customElements.define("comment-reply-form", CommentReplyForm);
+customElements.define("comment-form", CommentForm);

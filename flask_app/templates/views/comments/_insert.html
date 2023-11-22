@@ -4,7 +4,7 @@
         <span class="comment-rating">{{ comment.rating }}</span>
         <a href="/comments/{{ comment.id }}/rate-down" class="vote down-arrow"></a>
     </div>
-    <div class="column" style="flex: 1;">
+    <div style="flex: 1;">
         <h6 class="short">
             <a href="/users/{{ comment.user_id }}">
                 {{- comment.username }}</a>{%- if comment.parent_comment_username is defined -%},
@@ -13,19 +13,20 @@
                 {{- comment.parent_comment_username }}</a>
             {%- endif %}
         </h6>
-        <p class="short content pre-space" id="comment-content-{{ comment.id }}">{{ comment.content }}</p>
-        <span>
-            <span class="short row" style="font-size: .8em;" id="comment-links-{{ comment.id }}">
-                <a onclick="showReplyForm(
+        <div class="comment-body">
+            <p class="short content pre-space">{{ comment.content }}</p>
+            <span class="short row" style="font-size: .8em;">
+                <a onclick="showReplyForm(this.parentElement,
                     {{- cringe.id }},
                     {{- comment.id }},
-                    {{- auth_user.id }},'{{ comment.username }}')">Reply</a>
-                {%- if auth_user.id == comment.user_id -%}
-                <a onclick="editReply()">Edit</a>
-                <a href="/comments/{{ comment.id}}/delete">Delete</a>
+                    {{- auth_user.id -}}
+                    ,'{{ comment.username }}')">Reply</a>
+                {%- if auth_user.is_admin == 1 or auth_user.id == comment.user_id -%}
+                <a onclick="editComment({{ comment.cringe_id }}, {{ comment.id }})">Edit</a>
+                <a href="/comments/{{ comment.id }}/delete">Delete</a>
                 {%- endif %}
             </span>
-        </span>
+        </div>
     </div>
 </div>
 {% if comment.replies|count > 0 %}

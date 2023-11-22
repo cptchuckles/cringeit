@@ -46,3 +46,12 @@ class Comment(ModelBase):
                 setattr(item, "parent_comment_username", items[item.parent_comment_id].username)
 
         return [item for item in items.values() if item.parent_comment_id is None]
+
+    @classmethod
+    def update(cls, form_data):
+        query = f"""
+            UPDATE {cls.table}
+            SET content = %(content)s
+            WHERE id = %(id)s
+        """
+        return connectToMySQL(cls.db).query_db(query, form_data)
