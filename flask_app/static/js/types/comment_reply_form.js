@@ -149,7 +149,7 @@ class CommentForm extends HTMLElement {
 
         this.appendChild(form);
         textArea.focus();
-        textArea.setSelectionRange(textArea.value.length, textArea.value.length);
+        textArea.selectionStart = textArea.value.length;
     }
 }
 customElements.define("comment-form", CommentForm);
