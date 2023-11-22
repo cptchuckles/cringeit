@@ -16,10 +16,20 @@
         </div>
     </div>
     <div class="wide column">
-        <h2>Total Cringe: {{ "+" if user.total_cringe >= 0 }}{{ user.total_cringe }}</h2>
+        <div class="wide row">
+            <h2>Total Cringe: {{ "+" if user.total_cringe >= 0 }}{{ user.total_cringe }}</h2>
+            <div class="short row">
+                <a href="/dashboard" class="clear left-arrow button">Back to CringeFeed</a>
+                <a href="/cringe/new" class="plus button">Post Cringe</a>
+            </div>
+        </div>
+        {% if all_cringe|count > 0 %}
         {% for cringe in all_cringe %}
         {% include "/views/cringe/_insert.html" %}
         {% endfor %}
+        {% else %}
+        <h1 class="card" style="text-align: center;">This user has not posted any cringe</h1>
+        {% endif %}
     </div>
 </main>
 {%- endblock %}
