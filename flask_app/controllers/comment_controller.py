@@ -46,9 +46,9 @@ class CommentController(ControllerBase):
 
     @authorize_action(as_owner=True, unauthorized_to="/cringe/[cringe_id]")
     def update(self, form_data, **kwargs):
-        if not self.model.update(form_data):
+        if self.model.update(form_data) is False:
             flash("Comment could not be modified for some reason", "error")
-        return redirect(f"/cringe/{ form_data.get('cringe_id') }")
+        return redirect(f"/cringe/{ form_data.get('cringe_id') }#comment-{ form_data.get('id') }")
 
     @authorize_action(as_owner=True, unauthorized_to="/cringe/:cringe_id")
     def delete(self, id: int, **kwargs):
