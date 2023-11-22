@@ -59,7 +59,7 @@ class UserController(ControllerBase):
         if user is None:
             return abort(404)
 
-        all_cringe = Cringe.get_all_by_user(auth_user.id)
+        all_cringe = Cringe.get_all_by_user(user.id)
         setattr(user, "total_cringe", sum(cringe.rating for cringe in all_cringe))
 
         kwargs["user"] = user
