@@ -1,7 +1,7 @@
 {% extends "layouts/main.html" %}
 {%- block title -%}View Profile - {{ user.username }}{%- endblock -%}
 {% block content -%}
-<main class="content column">
+<main class="content column" style="gap: 4em;">
     {% include "layouts/_flash_messages.html" %}
     <div class="wide row">
         <div class="column">
@@ -15,7 +15,6 @@
             <span>Joined: {{ user.created_at }}</span>
         </div>
     </div>
-    <hr>
     <div class="wide column">
         <h2>Total Cringe: {{ "+" if user.total_cringe >= 0 }}{{ user.total_cringe }}</h2>
         {% for cringe in all_cringe %}
