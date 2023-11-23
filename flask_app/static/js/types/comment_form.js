@@ -109,8 +109,12 @@ class CommentForm extends HTMLElement {
 
         buttonRow.appendChild(
             Object.assign(document.createElement("button"), {
-                classList: buildDOMTokenList(["plus"]),
-                textContent: this.hiddenElement ? "Reply" : "Comment"
+                classList: this.isEditForm ? null : buildDOMTokenList(["plus"]),
+                textContent: this.hiddenElement
+                    ? (this.isEditForm
+                        ? "Update"
+                        : "Reply")
+                    : "Comment"
             })
         );
 
@@ -120,7 +124,7 @@ class CommentForm extends HTMLElement {
                 classList: buildDOMTokenList(["clear"]),
                 textContent: "Cancel",
             });
-            cancelButton.addEventListener("click", () => abort());
+            cancelButton.addEventListener("click", () => this.abort());
             buttonRow.appendChild(cancelButton);
         }
 

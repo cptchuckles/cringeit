@@ -2,7 +2,7 @@ function editComment(cringeId, commentId) {
     const commentBody = document.querySelector(`#comment-${commentId} .comment-body`);
     const content = commentBody.querySelector(".content").textContent;
     const editForm = new CommentForm({
-        hiddenElement: commentBody.cloneNode(true),
+        hiddenElement: commentBody,
         commentId: commentId,
         cringeId: cringeId,
         content: content,
@@ -15,7 +15,7 @@ function editComment(cringeId, commentId) {
 
 function showReplyForm(links, cringeId, parentCommentId, userId, parentUsername) {
     const replyForm = new CommentForm({
-        hiddenElement: links.cloneNode(true),
+        hiddenElement: links,
         cringeId: cringeId,
         userId: userId,
         parentCommentId: parentCommentId,
