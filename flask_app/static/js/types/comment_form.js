@@ -1,23 +1,22 @@
-function buildDOMTokenList(tokens) {
-    const tokenList = document.createElement("div").classList;
-    for (const token of tokens) {
-        tokenList.add(token);
+function MakeElement(elementType, attributes) {
+    const element = Object.assign(document.createElement(elementType), attributes);
+    for (const styleClass of attributes.classList || []) {
+        element.classList.add(styleClass);
     }
-    return tokenList;
+    return element;
 }
 
 class CommentForm extends HTMLElement {
     constructor(params = {}) {
         super();
 
-        this.hiddenElement = params.hiddenElement;
-        this.isEditForm = params.isEditForm;
-
-        this.userId = params.userId;
-        this.cringeId = params.cringeId;
+        this.isEditForm = "commentId" in params;
         this.commentId = params.commentId;
         this.parentCommentId = params.parentCommentId;
         this.parentUsername = params.parentUsername;
+
+        this.hiddenElement = params.hiddenElement;
+        this.cringeId = params.cringeId;
         this.content = params.content;
         this.focusOnLoad = params.focusOnLoad;
     }
@@ -35,21 +34,20 @@ class CommentForm extends HTMLElement {
     abort() {
         this.parentElement.appendChild(this.hiddenElement);
         this.remove();
-    };
+    }
 
     connectedCallback() {
-        this.userId = this.userId || this.getAttribute("user-id");
         this.cringeId = this.cringeId || this.getAttribute("cringe-id");
 
-        const form = Object.assign(document.createElement("form"), {
+        const form = MakeElement("form", {
             action: `/comments/${this.isEditForm ? "update" : "create"}`,
             method: "POST",
-            classList: buildDOMTokenList(["wide", "column"])
+            classList: ["wide", "column"]
         });
 
         if (this.commentId) {
             form.appendChild(
-                Object.assign(document.createElement("input"), {
+                MakeElement("input", {
                     type: "hidden",
                     name: "id",
                     value: this.commentId,
@@ -57,19 +55,9 @@ class CommentForm extends HTMLElement {
             );
         }
 
-        if (this.userId) {
-            form.appendChild(
-                Object.assign(document.createElement("input"), {
-                    type: "hidden",
-                    name: "user_id",
-                    value: this.userId
-                })
-            );
-        }
-
         if (this.cringeId) {
             form.appendChild(
-                Object.assign(document.createElement("input"), {
+                MakeElement("input", {
                     type: "hidden",
                     name: "cringe_id",
                     value: this.cringeId
@@ -79,7 +67,7 @@ class CommentForm extends HTMLElement {
 
         if (this.parentCommentId) {
             form.appendChild(
-                Object.assign(document.createElement("input"), {
+                MakeElement("input", {
                     type: "hidden",
                     name: "parent_comment_id",
                     value: this.parentCommentId
@@ -87,7 +75,7 @@ class CommentForm extends HTMLElement {
             );
         }
 
-        const textArea = Object.assign(document.createElement("textarea"), {
+        const textArea = MakeElement("textarea", {
             name: "content",
             rows: 4,
             placeholder: this.parentUsername
@@ -97,32 +85,29 @@ class CommentForm extends HTMLElement {
         textArea.addEventListener("keydown", ev => this.keyboardControlsHandler(ev));
         if (this.content) {
             textArea.value = this.content;
+            textArea.rows = Math.max(4, this.content.split("\n").length);
         }
         if (this.isEditForm) {
             textArea.style.marginTop = "1em";
         }
         form.appendChild(textArea);
 
-        const buttonRow = Object.assign(document.createElement("div"), {
-            classList: buildDOMTokenList(["short", "row"])
-        });
+        const buttonRow = MakeElement("div", { classList: ["short", "row"] });
 
         buttonRow.appendChild(
-            Object.assign(document.createElement("button"), {
-                classList: this.isEditForm ? null : buildDOMTokenList(["plus"]),
-                textContent: this.hiddenElement
-                    ? (this.isEditForm
-                        ? "Update"
-                        : "Reply")
-                    : "Comment"
+            MakeElement("button", {
+                classList: this.isEditForm ? [] : ["plus"],
+                textContent: this.hiddenElement ?
+                    (this.isEditForm ? "Update" : "Reply")
+                    : "Comment",
             })
         );
 
         if (this.hiddenElement) {
-            const cancelButton = Object.assign(document.createElement("button"), {
+            const cancelButton = MakeElement("button", {
                 type: "button",
-                classList: buildDOMTokenList(["clear"]),
                 textContent: "Cancel",
+                classList: ["clear"],
             });
             cancelButton.addEventListener("click", () => this.abort());
             buttonRow.appendChild(cancelButton);
