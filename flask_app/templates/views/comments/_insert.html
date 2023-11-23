@@ -21,7 +21,7 @@
                     {{- comment.id }},
                     {{- auth_user.id -}}
                     ,'{{ comment.username }}')">Reply</a>
-                {%- if auth_user.is_admin == 1 or auth_user.id == comment.user_id -%}
+                {%- if auth_user.is_admin == 1 or auth_user.id == comment.user_id %}
                 <a onclick="editComment({{ comment.cringe_id }}, {{ comment.id }})">Edit</a>
                 <a href="/comments/{{ comment.id }}/delete">Delete</a>
                 {%- endif %}
@@ -30,7 +30,7 @@
     </div>
 </div>
 {% if comment.replies|count > 0 %}
-<div style="padding-left: 2.5rem; border-left: 2px solid var(--bg-light); border-bottom-left-radius: 4em;">
+<div class="comment-replies">
 {% for reply in comment.replies %}
     {% with comment = reply %}
     {% include "/views/comments/_insert.html" %}

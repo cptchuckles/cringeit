@@ -45,6 +45,12 @@
   }
 }
 
+.comment-replies {
+  padding-left: 2.5rem;
+  border-left: 2px solid var(--bg-light);
+  border-bottom-left-radius: 4em;
+}
+
 .cringe-url {
   border: .15em solid var(--fg-dark);
   border-radius: .15em;
