@@ -14,12 +14,19 @@
         id="headline"
         placeholder="Enter a Clickbait Cringe Headline"
         style="font-size: 1.5em;"
-        {%- if cringe is defined %}value="{{ cringe.headline }}"{% endif -%}
-        required
-    />
+        maxlength="60"
+        {%- if cringe is defined %}value="{{ cringe.headline }}"{% endif %}
+        required />
     <div class="row">
         <label for="url">Source of Cringe URL:</label>
-        <input type="text" name="url" id="url" style="flex: 1; color: blue;" {% if cringe is defined %}value="{{ cringe.url }}"{% endif %} required />
+        <input
+            type="text"
+            name="url"
+            id="url"
+            maxlength="255"
+            style="flex: 1; color: blue;"
+            {%- if cringe is defined %}value="{{ cringe.url }}"{% endif %}
+            required />
     </div>
     <label for="description">Your Commentary or Description of Cringe</label>
     <textarea name="description" id="description" rows="10" required>{%- if cringe is defined %}{{ cringe.description }}{% endif %}</textarea>
