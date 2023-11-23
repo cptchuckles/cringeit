@@ -36,9 +36,10 @@ class CommentController(ControllerBase):
             return rate_comment(id, auth_user.id, -1)
 
     @authorize_action()
-    def create(self, form_data, **kwargs):
+    def create(self, form_data, auth_user, **kwargs):
         data = {**form_data}
         data["content"] = re.sub(r"(\s){2,}", r"\1\1", data["content"])
+        data["user_id"] = auth_user.id
         new_comment_id = self.model.create(data)
         if new_comment_id is False:
             flash("Comment could not be added for some reason", "error")
