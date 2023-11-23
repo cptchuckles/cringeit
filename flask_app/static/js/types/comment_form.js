@@ -7,11 +7,11 @@ function buildDOMTokenList(tokens) {
 }
 
 class CommentForm extends HTMLElement {
-    constructor(hiddenElement, params = {}) {
+    constructor(params = {}) {
         super();
 
-        this.hiddenElement = hiddenElement;
-        this.editForm = params.editForm;
+        this.hiddenElement = params.hiddenElement;
+        this.isEditForm = params.isEditForm;
 
         this.userId = params.userId;
         this.cringeId = params.cringeId;
@@ -19,21 +19,35 @@ class CommentForm extends HTMLElement {
         this.parentCommentId = params.parentCommentId;
         this.parentUsername = params.parentUsername;
         this.content = params.content;
+        this.focusOnLoad = params.focusOnLoad;
     }
 
+    keyboardControlsHandler(event) {
+        if (event.ctrlKey && event.key === "Enter") {
+            event.preventDefault();
+            event.target.form.submit();
+        }
+        else if (this.hiddenElement && event.key === "Escape") {
+            this.abort();
+        }
+    }
+
+    abort() {
+        this.parentElement.appendChild(this.hiddenElement);
+        this.remove();
+    };
+
     connectedCallback() {
-        const abort = () => {
-            this.parentElement.appendChild(this.hiddenElement);
-            this.remove();
-        };
+        this.userId = this.userId || this.getAttribute("user-id");
+        this.cringeId = this.cringeId || this.getAttribute("cringe-id");
 
         const form = Object.assign(document.createElement("form"), {
-            action: `/comments/${this.editForm ? "update" : "create"}`,
+            action: `/comments/${this.isEditForm ? "update" : "create"}`,
             method: "POST",
             classList: buildDOMTokenList(["wide", "column"])
         });
 
-        if (this.commentId !== undefined) {
+        if (this.commentId) {
             form.appendChild(
                 Object.assign(document.createElement("input"), {
                     type: "hidden",
@@ -43,7 +57,7 @@ class CommentForm extends HTMLElement {
             );
         }
 
-        if (this.userId !== undefined) {
+        if (this.userId) {
             form.appendChild(
                 Object.assign(document.createElement("input"), {
                     type: "hidden",
@@ -53,7 +67,7 @@ class CommentForm extends HTMLElement {
             );
         }
 
-        if (this.cringeId !== undefined) {
+        if (this.cringeId) {
             form.appendChild(
                 Object.assign(document.createElement("input"), {
                     type: "hidden",
@@ -63,7 +77,7 @@ class CommentForm extends HTMLElement {
             );
         }
 
-        if (this.parentCommentId !== undefined) {
+        if (this.parentCommentId) {
             form.appendChild(
                 Object.assign(document.createElement("input"), {
                     type: "hidden",
@@ -76,21 +90,15 @@ class CommentForm extends HTMLElement {
         const textArea = Object.assign(document.createElement("textarea"), {
             name: "content",
             rows: 4,
-            placeholder: `Reply to ${this.parentUsername}`
+            placeholder: this.parentUsername
+                ? `Reply to ${this.parentUsername}`
+                : "Write a Comment"
         });
-        textArea.addEventListener("keydown", ev => {
-            if (ev.shiftKey && ev.key === "Enter") {
-                ev.preventDefault();
-                ev.target.form.submit();
-            }
-            else if (ev.key === "Escape") {
-                abort();
-            }
-        });
-        if (this.content !== undefined ) {
+        textArea.addEventListener("keydown", ev => this.keyboardControlsHandler(ev));
+        if (this.content) {
             textArea.value = this.content;
         }
-        if (this.editForm) {
+        if (this.isEditForm) {
             textArea.style.marginTop = "1em";
         }
         form.appendChild(textArea);
@@ -102,23 +110,27 @@ class CommentForm extends HTMLElement {
         buttonRow.appendChild(
             Object.assign(document.createElement("button"), {
                 classList: buildDOMTokenList(["plus"]),
-                textContent: "Reply"
+                textContent: this.hiddenElement ? "Reply" : "Comment"
             })
         );
 
-        const cancelButton = Object.assign(document.createElement("button"), {
-            type: "button",
-            classList: buildDOMTokenList(["clear"]),
-            textContent: "Cancel",
-        });
-        cancelButton.addEventListener("click", () => abort());
-        buttonRow.appendChild(cancelButton);
+        if (this.hiddenElement) {
+            const cancelButton = Object.assign(document.createElement("button"), {
+                type: "button",
+                classList: buildDOMTokenList(["clear"]),
+                textContent: "Cancel",
+            });
+            cancelButton.addEventListener("click", () => abort());
+            buttonRow.appendChild(cancelButton);
+        }
 
         form.appendChild(buttonRow);
 
         this.appendChild(form);
-        textArea.focus();
-        textArea.selectionStart = textArea.value.length;
+        if (this.focusOnLoad) {
+            textArea.focus();
+            textArea.selectionStart = textArea.value.length;
+        }
     }
 }
 
