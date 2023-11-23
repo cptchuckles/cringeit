@@ -3,25 +3,24 @@ function editComment(cringeId, commentId) {
     const content = commentBody.querySelector(".content").textContent;
     const editForm = new CommentForm({
         hiddenElement: commentBody,
-        commentId: commentId,
         cringeId: cringeId,
+        commentId: commentId,
         content: content,
-        isEditForm: true,
         focusOnLoad: true,
     });
     commentBody.parentElement.appendChild(editForm);
     commentBody.remove();
 }
 
-function showReplyForm(links, cringeId, parentCommentId, userId, parentUsername) {
+function showReplyForm(link, cringeId, parentCommentId, parentUsername) {
+    const linkSpan = link.parentElement;
     const replyForm = new CommentForm({
-        hiddenElement: links,
+        hiddenElement: linkSpan,
         cringeId: cringeId,
-        userId: userId,
         parentCommentId: parentCommentId,
         parentUsername: parentUsername,
         focusOnLoad: true,
     });
-    links.parentElement.appendChild(replyForm);
-    links.remove();
+    linkSpan.parentElement.appendChild(replyForm);
+    linkSpan.remove();
 }

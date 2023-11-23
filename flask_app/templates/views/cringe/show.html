@@ -28,9 +28,11 @@
                 {% endif %}
             </p>
         </div>
-        <h1 class="rating">
-            {{ "+" if cringe.rating >= 0 }}{{ cringe.rating }}
-        </h1>
+        <div>
+            <h1 class="rating">
+                {{ "+" if cringe.rating >= 0 }}{{ cringe.rating }}
+            </h1>
+        </div>
     </div>
     <div class="cringe-url">
         <a href="{{ cringe.url }}">{{ cringe.url }}</a>
@@ -47,10 +49,7 @@
         </div>
         <a href="/cringe/{{ cringe.id }}/report">Report this</a>
     </div>
-    <comment-form
-        user-id="{{ auth_user.id }}"
-        cringe-id="{{ cringe.id }}"
-    ></comment-form>
+    <comment-form cringe-id="{{ cringe.id }}"></comment-form>
     <div class="column" style="gap: 0;">
         {% for comment in cringe.comments|reverse %}
         {% include "/views/comments/_insert.html" %}
