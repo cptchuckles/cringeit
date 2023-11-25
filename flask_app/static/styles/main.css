@@ -1,5 +1,6 @@
 :root {
   --page-width: 1000px;
+  --scrollbar-width: 15px;
 
   --fg: #ddd;
   --fg-dark: #000;
@@ -260,7 +261,7 @@ ol, ul {
 }
 
 .page {
-  width: var(--page-width);
+  width: min(var(--page-width), calc(100vw - var(--scrollbar-width)));
   min-width: 100%;
 }
 
