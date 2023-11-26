@@ -46,15 +46,15 @@ class ApiController():
         return (dictify(item), 200) if item is not None else ({}, 404)
 
     def create(self, form_json):
-        result = self.model.create(form_json)
-        if not result:
+        if (result := self.model.create(form_json)) is False:
             return {"success": False}, 500
-        return {"success": True, "id": result}, 201
+        else:
+            return {"success": True, "id": result}, 201
 
     def update(self, form_json):
-        result = self.model.update(form_json) is not False
-        return ({"success": result}, 204 if result is True else 500)
+        success = self.model.update(form_json) is not False
+        return ({"success": success}, 204 if success else 500)
 
     def delete(self, id: int):
-        result = self.model.delete(id) is not False
-        return ({"success": result}, 204 if result is True else 500)
+        success = self.model.delete(id) is not False
+        return ({"success": success}, 204 if success else 500)
