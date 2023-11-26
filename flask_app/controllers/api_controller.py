@@ -39,11 +39,11 @@ class ApiController():
         def delete(id: int): return self.delete(id)
 
     def index(self):
-        return [obj.__dict__ for obj in self.model.get_all()], 200
+        return dictify(self.model.get_all()), 200
 
     def get_by_id(self, id: int):
         item = self.model.get_by_id(id)
-        return (item.__dict__, 200) if item is not None else ({}, 404)
+        return (dictify(item), 200) if item is not None else ({}, 404)
 
     def create(self, form_json):
         result = self.model.create(form_json)
