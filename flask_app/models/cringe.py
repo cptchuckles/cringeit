@@ -36,7 +36,7 @@ class Cringe(ModelBase):
         item = cls(view[0])
         setattr(item, "username", view[0].get("username"))
         setattr(item, "rating", int(view[0].get("rating")))
-        setattr(item, "comments", comment.Comment.get_all_for_cringe(id))
+        setattr(item, "comments", comment.Comment.get_tree_for_cringe(id))
 
         return item
 

@@ -13,7 +13,7 @@ class Comment(ModelBase):
     ]
 
     @classmethod
-    def get_all_for_cringe(cls, cringe_id: int):
+    def get_tree_for_cringe(cls, cringe_id: int):
         users = user.User.table
         ratings = comment_rating.CommentRating.table
         query = f"""
