@@ -7,6 +7,10 @@ async function populateComments() {
 	comments.reverse().forEach(comment => {
 		commentsContainer.appendChild(new CringeComment(comment));
 	});
+
+	const hash = document.location.hash;
+	document.location.hash = '';
+	document.location.hash = hash;
 }
 
 populateComments();
