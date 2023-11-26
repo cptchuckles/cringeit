@@ -1,6 +1,6 @@
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app.models.model_base import ModelBase
-from flask_app.models import user, comment, cringe_rating
+from flask_app.models import user, cringe_rating
 
 
 class Cringe(ModelBase):
@@ -36,7 +36,6 @@ class Cringe(ModelBase):
         item = cls(view[0])
         setattr(item, "username", view[0].get("username"))
         setattr(item, "rating", int(view[0].get("rating")))
-        setattr(item, "comments", comment.Comment.get_tree_for_cringe(id))
 
         return item
 
