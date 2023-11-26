@@ -13,7 +13,7 @@ function editComment(cringeId, commentId) {
 }
 
 function showReplyForm(link, cringeId, parentCommentId, parentUsername) {
-    const linkSpan = link.parentElement;
+    const linkSpan = link;
     const replyForm = new CommentForm({
         hiddenElement: linkSpan,
         cringeId: cringeId,

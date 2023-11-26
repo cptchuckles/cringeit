@@ -16,7 +16,7 @@
         <div class="comment-body">
             <p class="short content pre-space">{{ comment.content }}</p>
             <span class="short row" style="font-size: .8em;">
-                <a onclick="showReplyForm(this,
+                <a onclick="showReplyForm(this.parentElement,
                     {{- cringe.id }},
                     {{- comment.id }},'{{ comment.username }}')">Reply</a>
                 {%- if auth_user.is_admin == 1 or auth_user.id == comment.user_id %}
