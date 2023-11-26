@@ -16,7 +16,7 @@ class UserController(ControllerBase):
         return self
 
     def register_user_auth_routes(self):
-        @app.route("/login", methods=["POST"])
+        @app.route("/login", methods=["POST"], endpoint="user/login")
         def login():
             if "user_id" in session:
                 return redirect("/")
@@ -28,7 +28,7 @@ class UserController(ControllerBase):
             session["user_id"] = user_id
             return redirect("/dashboard")
 
-        @app.route("/dashboard")
+        @app.route("/dashboard", endpoint="user/dashboard")
         @authorize_action()
         def dashboard(auth_user):
             if auth_user is None:
@@ -38,7 +38,7 @@ class UserController(ControllerBase):
                                    auth_user=auth_user,
                                    all_cringe=Cringe.get_all())
 
-        @app.route("/logout")
+        @app.route("/logout", endpoint="user/logout")
         def logout():
             session.clear()
             return redirect("/")
