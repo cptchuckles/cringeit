@@ -2,13 +2,15 @@
 {% block title %}{{ cringe.headline }} - CringeIt{% endblock %}
 {% block sources %}
 <script src="{{ url_for('static', filename='js/types/comments.js') }}"></script>
-<script src="{{ url_for('static', filename='js/comment_form_functions.js') }}"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/cringe.css') }}" />
 <style>
 .rating {
     background-color: {{ "var(--bg-positive)" if cringe.rating >= 0 else "var(--bg-negative)" }};
 }
 </style>
+<script>
+    window.authUserId = {{ auth_user.id }};
+</script>
 {% endblock %}
 {% block content -%}
 <main class="content column" style="gap: 2em;">

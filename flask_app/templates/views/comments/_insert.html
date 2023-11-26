@@ -16,11 +16,11 @@
         <div class="comment-body">
             <p class="short content pre-space">{{ comment.content }}</p>
             <span class="short row" style="font-size: .8em;">
-                <a onclick="showReplyForm(this.parentElement,
+                <a onclick="CringeComment.showReplyForm(this.parentElement,
                     {{- cringe.id }},
                     {{- comment.id }},'{{ comment.username }}')">Reply</a>
                 {%- if auth_user.is_admin == 1 or auth_user.id == comment.user_id %}
-                <a onclick="editComment({{ cringe.id }},{{ comment.id }})">Edit</a>
+                <a onclick="CringeComment.edit({{ cringe.id }},{{ comment.id }})">Edit</a>
                 <a href="/comments/{{ comment.id }}/delete">Delete</a>
                 {%- endif %}
             </span>

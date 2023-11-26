@@ -127,6 +127,33 @@ class CommentForm extends HTMLElement {
 }
 
 class CringeComment extends HTMLElement {
+    static edit(cringeId, commentId) {
+        const commentBody = document.querySelector(`#comment-${commentId} .comment-body`);
+        const content = commentBody.querySelector(".content").textContent;
+        const editForm = new CommentForm({
+            hiddenElement: commentBody,
+            cringeId: cringeId,
+            commentId: commentId,
+            content: content,
+            focusOnLoad: true,
+        });
+        commentBody.parentElement.appendChild(editForm);
+        commentBody.remove();
+    }
+
+    static showReplyForm(link, cringeId, parentCommentId, parentUsername) {
+        const linkSpan = link;
+        const replyForm = new CommentForm({
+            hiddenElement: linkSpan,
+            cringeId: cringeId,
+            parentCommentId: parentCommentId,
+            parentUsername: parentUsername,
+            focusOnLoad: true,
+        });
+        linkSpan.parentElement.appendChild(replyForm);
+        linkSpan.remove();
+    }
+
     constructor(data) {
         super();
 
@@ -204,13 +231,15 @@ class CringeComment extends HTMLElement {
         });
         const replyLink = document.createElement("a");
         replyLink.textContent = "Reply";
-        replyLink.addEventListener("click", () => showReplyForm(linkSpan, this.cringeId, this.commentId, this.username));
+        replyLink.addEventListener("click", () => {
+            CringeComment.showReplyForm(linkSpan, this.cringeId, this.commentId, this.username);
+        });
         linkSpan.appendChild(replyLink);
 
         if (window.authUserId === this.userId) {
             const editLink = document.createElement("a");
             editLink.textContent = "Edit";
-            editLink.addEventListener("click", () => editComment(this.cringeId, this.commentId));
+            editLink.addEventListener("click", () => CringeComment.edit(this.cringeId, this.commentId));
             linkSpan.appendChild(editLink);
 
             linkSpan.appendChild(MakeElement("a", {
