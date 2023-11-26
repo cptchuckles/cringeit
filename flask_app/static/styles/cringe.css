@@ -44,6 +44,9 @@
       transform: rotate(-135deg);
     }
   }
+  & h6 a {
+    color: var(--fg-heading) !important;
+  }
 }
 
 .comment-replies {
