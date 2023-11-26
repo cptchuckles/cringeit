@@ -6,6 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="{{ url_for('static', filename='styles/main.css') }}" rel="stylesheet">
         {% block sources %}{% endblock %}
+        {% if auth_user is defined %}
+        <script>
+            const authUserId = {{ auth_user.id }};
+        </script>
+        {% endif %}
     </head>
     <body>
         {% block header -%}

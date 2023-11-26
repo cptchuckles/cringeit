@@ -236,7 +236,7 @@ class CringeComment extends HTMLElement {
         });
         linkSpan.appendChild(replyLink);
 
-        if (window.authUserId === this.userId) {
+        if (authUserId === this.userId) {
             const editLink = document.createElement("a");
             editLink.textContent = "Edit";
             editLink.addEventListener("click", () => CringeComment.edit(this.cringeId, this.commentId));
