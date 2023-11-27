@@ -13,8 +13,9 @@ class CommentForm extends HTMLElement {
     constructor(params = {}) {
         super();
 
-        this.isEditForm = "commentId" in params;
         this.commentId = params.commentId;
+
+        this.isEditForm = "commentId" in params;
         this.parentCommentId = params.parentCommentId;
         this.parentUsername = params.parentUsername;
 
@@ -22,31 +23,64 @@ class CommentForm extends HTMLElement {
         this.cringeId = params.cringeId;
         this.content = params.content;
         this.focusOnLoad = params.focusOnLoad;
+
+        this.data = null;
     }
 
     keyboardControlsHandler(event) {
         if (event.ctrlKey && event.key === "Enter") {
             event.preventDefault();
-            event.target.form.submit();
+            event.target.form.dispatchEvent(new Event("submit"));
         }
         else if (this.hiddenElement && event.key === "Escape") {
-            this.abort();
+            this.destroy();
         }
     }
 
-    abort() {
+    destroy() {
         this.parentElement.appendChild(this.hiddenElement);
         this.remove();
+    }
+
+    async post(ev) {
+        ev.preventDefault();
+        const form = ev.target;
+        const formData = new FormData(form);
+        const response = await fetch("/api/comments/create", { method: "POST", body: formData });
+        const [status, json] = [response.status, await response.json()];
+        if (status === 201) {
+            const comment = await fetch(`/api/comments/${json.id}`).then(resp => resp.json())
+            if (this.parentCommentId) {
+                const parent = document.getElementById(`comment-${this.parentCommentId}`).parentElement;
+                const reply = parent.addReply(comment);
+                reply.focus();
+                this.destroy();
+            }
+            else {
+                const commentSection = document.getElementById("comments");
+                const newComment = new CringeComment(comment);
+                commentSection.insertBefore(newComment, commentSection.firstChild);
+                newComment.focus();
+                form.reset();
+            }
+            return true;
+        }
+        else {
+            const errorMessage = "Could not post comment:\n" + json.errors.join("\n");
+            alert(errorMessage);
+            console.log(errorMessage);
+            return false;
+        }
     }
 
     connectedCallback() {
         this.cringeId = this.cringeId || this.getAttribute("cringe-id");
 
         const form = MakeElement("form", {
-            action: `/comments/${this.isEditForm ? "update" : "create"}`,
             method: "POST",
             classes: ["wide", "column"]
         });
+        form.addEventListener("submit", ev => this.post(ev))
 
         if (this.commentId) {
             form.appendChild(
@@ -112,7 +146,7 @@ class CommentForm extends HTMLElement {
                 textContent: "Cancel",
                 classes: ["clear"],
             });
-            cancelButton.addEventListener("click", () => this.abort());
+            cancelButton.addEventListener("click", () => this.destroy());
             buttonRow.appendChild(cancelButton);
         }
 
@@ -275,6 +309,22 @@ class CringeComment extends HTMLElement {
             }
             this.appendChild(replies);
         }
+    }
+
+    addReply(reply) {
+        let replies = this.querySelector(".comment-replies");
+        if (replies === null) {
+            replies = MakeElement("div", { classes: ["comment-replies"] });
+            this.appendChild(replies);
+        }
+        const replyInstance = new CringeComment(reply);
+        replies.appendChild(replyInstance);
+        return replyInstance;
+    }
+
+    focus() {
+        document.location.hash = '';
+        document.location.hash = `#comment-${this.commentId}`;
     }
 }
 
