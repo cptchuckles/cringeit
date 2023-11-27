@@ -154,6 +154,21 @@ class CringeComment extends HTMLElement {
         linkSpan.remove();
     }
 
+    static async populateCringeComments() {
+        const commentsContainer = document.getElementById("comments");
+
+        const response = await fetch("/api" + document.location.pathname + "/comments");
+        const comments = await response.json();
+
+        for (let i=comments.length; i-- > 0;) {
+            commentsContainer.appendChild(new CringeComment(comments[i]));
+        }
+
+        const hash = document.location.hash;
+        document.location.hash = '';
+        document.location.hash = hash;
+    }
+
     constructor(data) {
         super();
 
