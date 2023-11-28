@@ -1,6 +1,8 @@
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app.models.model_base import ModelBase
 from flask_app.models import user, comment_rating
+from datetime import datetime
+import re
 
 
 class Comment(ModelBase):
@@ -11,6 +13,20 @@ class Comment(ModelBase):
         "parent_comment_id",
         "content",
     ]
+
+    @classmethod
+    def create(cls, form_data):
+        data = {**form_data}
+        data["content"] = re.sub(r"(\s){2,}", r"\1\1", data["content"])
+        if (new_id := super().create(data)) is False:
+            return False
+
+        return cls({
+            "id": new_id,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+            **data
+        })
 
     @classmethod
     def get_tree_for_cringe(cls, cringe_id: int):
@@ -55,7 +71,7 @@ class Comment(ModelBase):
             SELECT
                 {cls.table}.*,
                 {users}.username AS username,
-                parent_{users}.username AS parent_comment_username,
+                parent_comments.username AS parent_comment_username,
                 SUM(COALESCE({ratings}.delta, 0)) AS rating
             FROM {cls.table}
             JOIN {users}
@@ -63,8 +79,8 @@ class Comment(ModelBase):
             LEFT JOIN (
                 SELECT {cls.table}.id, {users}.username FROM {cls.table}
                 JOIN {users} ON {users}.id = {cls.table}.user_id
-            ) AS parent_{users}
-                ON parent_{users}.id = {cls.table}.parent_comment_id
+            ) AS parent_comments
+                ON parent_comments.id = {cls.table}.parent_comment_id
             LEFT JOIN {ratings}
                 ON {ratings}.comment_id = {cls.table}.id
             WHERE {cls.table}.id = %(id)s
@@ -83,9 +99,14 @@ class Comment(ModelBase):
 
     @classmethod
     def update(cls, form_data):
+        data = {**form_data}
+        data["content"] = re.sub(r"(\s){2,}", r"\1\1", data["content"])
         query = f"""
             UPDATE {cls.table}
             SET content = %(content)s
             WHERE id = %(id)s
         """
-        return connectToMySQL(cls.db).query_db(query, form_data)
+        if connectToMySQL(cls.db).query_db(query, data) is False:
+            return False
+        else:
+            return data

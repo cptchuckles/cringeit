@@ -4,7 +4,6 @@ from flask_app.config.policy import authorize_action
 from flask_app.models.comment import Comment
 from flask_app.models.cringe import Cringe
 from .api_controller import ApiController, dictify
-import re
 
 
 def api_error(*args, **kwargs):
@@ -12,8 +11,7 @@ def api_error(*args, **kwargs):
 
 
 def authorize_api_action(**kwargs):
-    kwargs["error_handler"] = api_error
-    return authorize_action(**kwargs)
+    return authorize_action(error_handler=api_error, **kwargs)
 
 
 class CommentApiController(ApiController):
@@ -40,14 +38,17 @@ class CommentApiController(ApiController):
     def create(self, form_json, auth_user, **kwargs):
         data = {**form_json}
         data["user_id"] = auth_user.id
-        data["content"] = re.sub(r"(\s){2,}", r"\1\1", data["content"])
-        return super().create(data)
+        if (result := self.model.create(data)) is False:
+            return {"success": False, "errors": ["Database failure"]}, 500
+        else:
+            return {"success": True, "data": dictify(result)}, 201
 
     @authorize_api_action(as_owner=True)
     def update(self, form_json, **kwargs):
-        data = {**form_json}
-        data["content"] = re.sub(r"(\s){2,}", r"\1\1", data["content"])
-        return super().update(data)
+        if (result := self.model.update(form_json)) is not False:
+            return {"success": True, "data": result}, 200
+        else:
+            return {"success": False, "errors": ["Database failure"]}, 500
 
     @authorize_api_action(as_owner=True)
     def delete(self, id: int, **kwargs):

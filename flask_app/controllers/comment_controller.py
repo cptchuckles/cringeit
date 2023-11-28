@@ -4,7 +4,6 @@ from flask_app.controllers.controller_base import ControllerBase
 from flask_app.models.comment import Comment
 from flask_app.models.comment_rating import CommentRating
 from flask_app import app
-import re
 
 
 class CommentController(ControllerBase):
@@ -38,20 +37,16 @@ class CommentController(ControllerBase):
     @authorize_action()
     def create(self, form_data, auth_user, **kwargs):
         data = {**form_data}
-        data["content"] = re.sub(r"(\s){2,}", r"\1\1", data["content"])
         data["user_id"] = auth_user.id
-        new_comment_id = self.model.create(data)
-        if new_comment_id is False:
+        if (result := self.model.create(data)) is False:
             flash("Comment could not be added for some reason", "error")
-        return redirect(f"/cringe/{ data.get('cringe_id') }#comment-{ new_comment_id }")
+        return redirect(f"/cringe/{ data.get('cringe_id') }#comment-{ result.id }")
 
     @authorize_action(as_owner=True, unauthorized_to="/cringe/[cringe_id]")
     def update(self, form_data, **kwargs):
-        data = {**form_data}
-        data["content"] = re.sub(r"(\s){2,}", r"\1\1", data["content"])
-        if self.model.update(data) is False:
+        if self.model.update(form_data) is False:
             flash("Comment could not be modified for some reason", "error")
-        return redirect(f"/cringe/{ data.get('cringe_id') }#comment-{ data.get('id') }")
+        return redirect(f"/cringe/{ form_data.get('cringe_id') }#comment-{ form_data.get('id') }")
 
     @authorize_action(as_owner=True, unauthorized_to="/cringe/:cringe_id")
     def delete(self, id: int, **kwargs):
