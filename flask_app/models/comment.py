@@ -64,7 +64,7 @@ class Comment(ModelBase):
         return [item for item in items.values() if item.parent_comment_id is None]
 
     @classmethod
-    def get_by_id(cls, id: int):
+    def get_full_by_id(cls, id: int):
         users = user.User.table
         ratings = comment_rating.CommentRating.table
         query = f"""
