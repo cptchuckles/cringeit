@@ -1,6 +1,7 @@
 from flask_app.config.mysqlconnection import connectToMySQL
 from .model_base import ModelBase
 from . import user, cringe_rating
+import re
 
 
 class Cringe(ModelBase):
@@ -97,3 +98,15 @@ class Cringe(ModelBase):
             items.append(item)
 
         return items
+
+    @classmethod
+    def create(cls, form_data):
+        data = {**form_data}
+        data["description"] = re.sub(r"(\s){2,}", r"\1\1", data["description"])
+        return super().create(data)
+
+    @classmethod
+    def update(cls, form_data):
+        data = {**form_data}
+        data["description"] = re.sub(r"(\s){2,}", r"\1\1", data["description"])
+        return super().update(data)
