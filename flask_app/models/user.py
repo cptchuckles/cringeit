@@ -1,7 +1,7 @@
 from flask import flash, session
-from flask_app.models.model_base import ModelBase
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app import bcrypt
+from .model_base import ModelBase
 import re
 
 

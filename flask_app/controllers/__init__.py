@@ -1,6 +1,6 @@
-from flask_app.controllers.user_controller import UserController
-from flask_app.controllers.cringe_controller import CringeController
-from flask_app.controllers.comment_controller import CommentController
+from .user_controller import UserController
+from .cringe_controller import CringeController
+from .comment_controller import CommentController
 from .comment_api_controller import CommentApiController
 
 UserController().register_crud_routes().register_user_auth_routes()

@@ -1,6 +1,6 @@
 from flask_app.config.mysqlconnection import connectToMySQL
-from flask_app.models.model_base import ModelBase
-from flask_app.models import user, comment
+from .model_base import ModelBase
+from . import user, comment
 
 
 class CommentRating(ModelBase):

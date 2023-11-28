@@ -1,7 +1,7 @@
 from flask_app.config.mysqlconnection import connectToMySQL
-from flask_app.models.model_base import ModelBase
-from flask_app.models import user, comment_rating
 from datetime import datetime
+from .model_base import ModelBase
+from . import user, comment_rating
 import re
 
 

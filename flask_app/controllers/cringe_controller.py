@@ -1,9 +1,9 @@
 from flask import redirect, flash
+from flask_app import app
 from flask_app.config.policy import authorize_action
-from flask_app.controllers.controller_base import ControllerBase
 from flask_app.models.cringe_rating import CringeRating
 from flask_app.models.cringe import Cringe
-from flask_app import app
+from .controller_base import ControllerBase
 import re
 
 

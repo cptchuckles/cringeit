@@ -1,9 +1,9 @@
 from flask import redirect, flash
+from flask_app import app
 from flask_app.config.policy import authorize_action
-from flask_app.controllers.controller_base import ControllerBase
+from .controller_base import ControllerBase
 from flask_app.models.comment import Comment
 from flask_app.models.comment_rating import CommentRating
-from flask_app import app
 
 
 class CommentController(ControllerBase):
