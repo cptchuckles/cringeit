@@ -259,6 +259,9 @@ ol, ul {
     background-color: var(--bg-light);
   }
 }
+:target > .card {
+  background-color: var(--bg-light);
+}
 
 .page {
   width: min(var(--page-width), calc(100vw - var(--scrollbar-width)));

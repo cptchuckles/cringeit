@@ -1,7 +1,7 @@
 {% extends "layouts/main.html" %}
 {% block title %}{{ cringe.headline }} - CringeIt{% endblock %}
 {% block sources %}
-<script src="{{ url_for('static', filename='js/types/comments.js') }}"></script>
+<script src="{{ url_for('static', filename='js/types/comments.js') }}" defer></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/cringe.css') }}" />
 <style>
 .rating {
@@ -49,7 +49,7 @@
         <a href="/cringe/{{ cringe.id }}/report">Report this</a>
     </div>
     <comment-form cringe-id="{{ cringe.id }}"></comment-form>
-    <div id="comments" class="column" style="gap: 0;"></div>
+    <cringe-comment-tree></cringe-comment-tree>
     <hr>
     <div class="wide row">
         <div style="flex: 1;">
@@ -63,5 +63,4 @@
         </div>
     </div>
 </main>
-<script>CringeComment.populateCringeComments()</script>
 {%- endblock %}
