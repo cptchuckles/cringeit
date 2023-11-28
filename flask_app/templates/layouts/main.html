@@ -7,7 +7,10 @@
         <link href="{{ url_for('static', filename='styles/main.css') }}" rel="stylesheet">
         {% if auth_user is defined %}
         <script>
-            const authUserId = {{ auth_user.id }};
+            const authUser = Object.freeze({
+                id: {{ auth_user.id }},
+                username: "{{ auth_user.username }}",
+            });
         </script>
         {% endif %}
         {% block sources %}{% endblock %}
