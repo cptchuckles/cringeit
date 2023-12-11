@@ -214,7 +214,7 @@ class CommentForm extends HTMLElement {
             this.destroy();
         }
         else {
-            const errorMessage = ["Could not update comment for some reason:", json.errors].join("\n\t- ");
+            const errorMessage = ["Could not update comment for some reason:", ...json.errors].join("\n\t- ");
             console.error(errorMessage);
             form.getElementsByTagName("textarea")[0].style.backgroundColor = "yellow";
         }
