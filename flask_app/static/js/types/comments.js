@@ -3,6 +3,9 @@
  * with the specified attributes.
  *
  * @param {string} elementType
+ * @param {Object} attributes Normal key-value pairs matching DOM attributes
+ * @param {string[]?} attributes.classes Classes to apply to the element's classList
+ * @param {{string:string}?} attributes.styleRules Inline style rules to apply
  * @returns {HTMLElement}
  */
 function MakeElement(elementType, attributes) {
