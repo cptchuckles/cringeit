@@ -6,6 +6,9 @@
     <div class="wide row">
         <div class="column">
             <h1>{{ user.username }}</h1>
+            {% if user.is_admin %}
+            <p>This user is an administrator.</p>
+            {% endif %}
             {% if auth_user.id == user.id or auth_user.is_admin %}
             <a href="/users/{{ user.id }}/edit">Edit Profile</a>
             {% endif %}
