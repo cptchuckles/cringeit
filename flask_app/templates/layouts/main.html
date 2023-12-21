@@ -10,6 +10,7 @@
             const authUser = Object.freeze({
                 id: {{ auth_user.id }},
                 username: "{{ auth_user.username }}",
+                isAdmin: {{ "true" if auth_user.is_admin else "false" }},
             });
         </script>
         {% endif %}
