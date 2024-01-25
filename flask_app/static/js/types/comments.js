@@ -58,87 +58,48 @@ class CommentForm extends HTMLElement {
     connectedCallback() {
         this.cringeId = this.cringeId ?? this.getAttribute("cringe-id");
 
-        /** @type {HTMLFormElement} */
-        const form =  Tag("form", {
-            method: "POST",
-            classes: ["wide", "column"]
-        });
-        form.addEventListener("submit", ev => this.isEditForm ? this.update(ev) : this.post(ev))
-
-        if (this.commentId) {
-            form.appendChild(
-                Tag("input", {
-                    type: "hidden",
-                    name: "id",
-                    value: this.commentId,
-                })
-            );
-        }
-
-        if (this.cringeId) {
-            form.appendChild(
-                Tag("input", {
-                    type: "hidden",
-                    name: "cringe_id",
-                    value: this.cringeId
-                })
-            );
-        }
-
-        if (this.parentCommentId) {
-            form.appendChild(
-                Tag("input", {
-                    type: "hidden",
-                    name: "parent_comment_id",
-                    value: this.parentCommentId
-                })
-            );
-        }
-
-        const textArea = Tag("textarea", {
+        /** @type {HTMLTextAreaElement} */
+        const commentTextArea = Tag("textarea", {
             name: "content",
-            rows: 4,
             placeholder: this.parentCommentUsername
                 ? `Reply to ${this.parentCommentUsername}`
-                : "Write a Comment"
+                : "Write a Comment",
+            events: { keydown: ev => this.keydownEventHandler(ev) },
+            value: this.content ?? "",
+            rows: Math.max(4, this.content?.split("\n").length ?? 0),
+            style: this.isEditForm ? "margin-top: 1em" : "",
         });
-        textArea.addEventListener("keydown", ev => this.keydownEventHandler(ev));
-        if (this.content) {
-            textArea.value = this.content;
-            textArea.rows = Math.max(4, this.content.split("\n").length);
-        }
-        if (this.isEditForm) {
-            textArea.style.marginTop = "1em";
-        }
-        form.appendChild(textArea);
 
-        const buttonRow = Tag("div", { classes: ["short", "row"] });
+        this.appendChild(
+            Tag("form", {
+                method: "POST", classes: ["wide", "column"],
+                events: { submit: this.isEditForm ? (ev => this.update(ev)) : (ev => this.post(ev)) }
+            }, [
+                this.commentId && Tag("input", { type: "hidden", name: "id", value: this.commentId }),
+                this.cringeId && Tag("input", { type: "hidden", name: "cringe_id", value: this.cringeId }),
+                this.parentCommentId && Tag("input", { type: "hidden", name: "parent_comment_id", value: this.parentCommentId }),
 
-        buttonRow.appendChild(
-            Tag("button", {
-                classes: this.isEditForm ? [] : ["plus"],
-                textContent: this.hiddenElement ?
-                    (this.isEditForm ? "Update" : "Reply")
-                    : "Comment",
-            })
+                commentTextArea,
+
+                Tag("div", { classes: ["short", "row"] }, [
+                    Tag("button", {
+                        classes: this.isEditForm ? [] : ["plus"],
+                        textContent: this.hiddenElement ? (this.isEditForm ? "Update" : "Reply") : "Comment",
+                    }),
+
+                    this.hiddenElement && Tag("button", {
+                        type: "button",
+                        textContent: "Cancel",
+                        classes: ["clear"],
+                        events: { click: () => this.destroy() },
+                    }),
+                ])
+            ])
         );
 
-        if (this.hiddenElement) {
-            const cancelButton = Tag("button", {
-                type: "button",
-                textContent: "Cancel",
-                classes: ["clear"],
-            });
-            cancelButton.addEventListener("click", () => this.destroy());
-            buttonRow.appendChild(cancelButton);
-        }
-
-        form.appendChild(buttonRow);
-
-        this.appendChild(form);
         if (this.focusOnLoad) {
-            textArea.focus();
-            textArea.selectionStart = textArea.value.length;
+            commentTextArea.focus();
+            commentTextArea.selectionStart = commentTextArea.value.length;
         }
     }
 
@@ -281,82 +242,42 @@ class CringeComment extends HTMLElement {
         this.content = this.content ?? this.textContent;
         this.textContent = "";
 
-        const root = Tag("div", {
-            classes: ["comment", "row", "card"],
-        });
+        const canEdit = (authUser.isAdmin || authUser.id === this.userId);
 
-        const vote = Tag("div", {
-            classes: ["column"],
-            styleRules: { gap: "0", alignItems: "center" },
-        });
-        vote.appendChild(Tag("a", {
-            classes: ["vote", "up-arrow"],
-            href: `/comments/${this.commentId}/rate-up`,
-        }));
-        vote.appendChild(Tag("span", {
-            classes: ["comment-rating"],
-            textContent: this.rating,
-        }));
-        vote.appendChild(Tag("a", {
-            classes: ["vote", "down-arrow"],
-            href: `/comments/${this.commentId}/rate-down`,
-        }));
-
-        root.appendChild(vote);
-
-        const body = Tag("div", { styleRules: { flex: "1" } });
-        const userHeading = Tag("h6", { classes: ["short"] });
-        userHeading.appendChild(Tag("a", {
-            href: `/users/${this.userId}`,
-            textContent: this.username,
-        }));
-        if (this.parentCommentId) {
-            userHeading.appendChild(new Text(" replying to "));
-            userHeading.appendChild(Tag("a", {
-                href: `#comment-${this.parentCommentId}`,
-                textContent: this.parentCommentUsername,
-            }));
-        }
-        body.appendChild(userHeading);
-
-        const commentBody = Tag("div", { classes: ["comment-body"] });
-        commentBody.appendChild(Tag("p", {
-            classes: ["short", "content", "pre-space"],
-            textContent: this.content,
-        }));
-
-        const linkSpan = Tag("span", {
-            classes: ["comment-links", "short", "row"],
-            styleRules: { fontSize: ".8em" },
-        });
-        const replyLink = document.createElement("a");
-        replyLink.textContent = "Reply";
-        replyLink.addEventListener("click", () => this.showReplyForm());
-        linkSpan.appendChild(replyLink);
-
-        if (authUser.isAdmin || authUser.id === this.userId) {
-            const editLink = document.createElement("a");
-            editLink.textContent = "Edit";
-            editLink.addEventListener("click", () => this.showEditForm());
-            linkSpan.appendChild(editLink);
-
-            linkSpan.appendChild(Tag("a", {
-                href: `/comments/${this.commentId}/delete`,
-                textContent: "Delete",
-            }));
-        }
-
-        commentBody.appendChild(linkSpan);
-        body.appendChild(commentBody);
-        root.appendChild(body);
-        this.appendChild(root);
+        this.appendChild(
+            Tag("div", { classes: ["comment", "row", "card"], }, [
+                // ratings
+                Tag("div", { classes: ["column"], styleRules: { gap: "0", alignItems: "center" }, }, [
+                    Tag("a", { classes: ["vote", "up-arrow"], href: `/comments/${this.commentId}/rate-up` }),
+                    Tag("span", { classes: ["comment-rating"], textContent: this.rating }),
+                    Tag("a", { classes: ["vote", "down-arrow"], href: `/comments/${this.commentId}/rate-down` }),
+                ]),
+                // body
+                Tag("div", { styleRules: { flex: "1" } }, [
+                    // user heading
+                    Tag("h6", { classes: ["short"] }, [
+                        Tag("a", { href: `/users/${this.userId}`, textContent: this.username }),
+                        this.parentCommentId && new Text(" replying to "),
+                        this.parentCommentId && Tag("a", { href: `#comment-${this.parentCommentId}`, textContent: this.parentCommentUsername }),
+                    ]),
+                    // comment body
+                    Tag("div", { classes: ["comment-body"] }, [
+                        Tag("p", { classes: ["short", "content", "pre-space"], textContent: this.content }),
+                        Tag("span", {
+                            classes: ["comment-links", "short", "row"],
+                            styleRules: { fontSize: ".8em" },
+                        }, [
+                            Tag("a", { textContent: "Reply", events: { click: () => this.showReplyForm() } }),
+                            canEdit && Tag("a", { textContent: "Edit", events: { click: () => this.showEditForm() } }),
+                            canEdit && Tag("a", { href: `/comments/${this.commentId}/delete`, textContent: "Delete", }),
+                        ]),
+                    ]),
+                ]),
+            ])
+        );
 
         if (this.replies.length > 0) {
-            const replies = Tag("div", { classes: ["comment-replies"] });
-            for (const reply of this.replies) {
-                replies.appendChild(new CringeComment(reply));
-            }
-            this.appendChild(replies);
+            this.appendChild(Tag("div", { classes: ["comment-replies"] }, this.replies.map(r => new CringeComment(r))));
         }
     }
 
