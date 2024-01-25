@@ -6,15 +6,25 @@
  * @param {Object} attributes Normal key-value pairs matching DOM attributes
  * @param {string[]?} attributes.classes Classes to apply to the element's classList
  * @param {{string:string}?} attributes.styleRules Inline style rules to apply
+ * @param {{string:func}?} attributes.events Event handlers
+ * @param {Object[]?} children Nested child elements
  * @returns {HTMLElement}
  */
-function MakeElement(elementType, attributes) {
+function Tag(elementType, attributes, children = []) {
     const element = Object.assign(document.createElement(elementType), attributes);
-    for (const styleClass of attributes.classes || []) {
+    for (const styleClass of attributes.classes ?? []) {
         element.classList.add(styleClass);
     }
-    for (const [rule, value] of Object.entries(attributes.styleRules || {})) {
+    for (const [rule, value] of Object.entries(attributes.styleRules ?? {})) {
         element.style[rule] = value;
+    }
+    for (const [ev, cb] of Object.entries(attributes.events ?? {})) {
+        element.addEventListener(ev, cb);
+    }
+    for (let i=0; i<children.length; i++) {
+        if (children[i]) {
+            element.appendChild(children[i]);
+        }
     }
     return element;
 }
@@ -46,10 +56,10 @@ class CommentForm extends HTMLElement {
     }
 
     connectedCallback() {
-        this.cringeId = this.cringeId || this.getAttribute("cringe-id");
+        this.cringeId = this.cringeId ?? this.getAttribute("cringe-id");
 
         /** @type {HTMLFormElement} */
-        const form =  MakeElement("form", {
+        const form =  Tag("form", {
             method: "POST",
             classes: ["wide", "column"]
         });
@@ -57,7 +67,7 @@ class CommentForm extends HTMLElement {
 
         if (this.commentId) {
             form.appendChild(
-                MakeElement("input", {
+                Tag("input", {
                     type: "hidden",
                     name: "id",
                     value: this.commentId,
@@ -67,7 +77,7 @@ class CommentForm extends HTMLElement {
 
         if (this.cringeId) {
             form.appendChild(
-                MakeElement("input", {
+                Tag("input", {
                     type: "hidden",
                     name: "cringe_id",
                     value: this.cringeId
@@ -77,7 +87,7 @@ class CommentForm extends HTMLElement {
 
         if (this.parentCommentId) {
             form.appendChild(
-                MakeElement("input", {
+                Tag("input", {
                     type: "hidden",
                     name: "parent_comment_id",
                     value: this.parentCommentId
@@ -85,7 +95,7 @@ class CommentForm extends HTMLElement {
             );
         }
 
-        const textArea = MakeElement("textarea", {
+        const textArea = Tag("textarea", {
             name: "content",
             rows: 4,
             placeholder: this.parentCommentUsername
@@ -102,10 +112,10 @@ class CommentForm extends HTMLElement {
         }
         form.appendChild(textArea);
 
-        const buttonRow = MakeElement("div", { classes: ["short", "row"] });
+        const buttonRow = Tag("div", { classes: ["short", "row"] });
 
         buttonRow.appendChild(
-            MakeElement("button", {
+            Tag("button", {
                 classes: this.isEditForm ? [] : ["plus"],
                 textContent: this.hiddenElement ?
                     (this.isEditForm ? "Update" : "Reply")
@@ -114,7 +124,7 @@ class CommentForm extends HTMLElement {
         );
 
         if (this.hiddenElement) {
-            const cancelButton = MakeElement("button", {
+            const cancelButton = Tag("button", {
                 type: "button",
                 textContent: "Cancel",
                 classes: ["clear"],
@@ -246,76 +256,76 @@ class CringeComment extends HTMLElement {
         super();
 
         this.commentId = id;
-        this.cringeId = cringeId || cringe_id;
-        this.userId = userId || user_id;
+        this.cringeId = cringeId ?? cringe_id;
+        this.userId = userId ?? user_id;
         this.username = username;
         this.content = content;
         this.rating = rating;
-        this.parentCommentId = parentCommentId || parent_comment_id;
-        this.parentCommentUsername = parentCommentUsername || parent_comment_username;
-        this.replies = replies || [];
-        this.createdAt = created_at || createdAt;
+        this.parentCommentId = parentCommentId ?? parent_comment_id;
+        this.parentCommentUsername = parentCommentUsername ?? parent_comment_username;
+        this.replies = replies ?? [];
+        this.createdAt = created_at ?? createdAt;
     }
 
     connectedCallback() {
-        this.commentId = this.getAttribute("id") || this.commentId;
-        this.parentCommentId = this.getAttribute("parent-comment-id") || this.parentCommentId;
-        this.userId = this.getAttribute("user-id") || this.userId;
-        this.username = this.getAttribute("username") || this.username;
-        this.rating = this.getAttribute("rating") || this.rating;
+        this.commentId = this.getAttribute("id") ?? this.commentId;
+        this.parentCommentId = this.getAttribute("parent-comment-id") ?? this.parentCommentId;
+        this.userId = this.getAttribute("user-id") ?? this.userId;
+        this.username = this.getAttribute("username") ?? this.username;
+        this.rating = this.getAttribute("rating") ?? this.rating;
 
         this.parentCommentId = Number(this.parentCommentId);
         this.userId = Number(this.userId);
 
         this.id = `comment-${this.commentId}`;
-        this.content = this.content || this.textContent;
+        this.content = this.content ?? this.textContent;
         this.textContent = "";
 
-        const root = MakeElement("div", {
+        const root = Tag("div", {
             classes: ["comment", "row", "card"],
         });
 
-        const vote = MakeElement("div", {
+        const vote = Tag("div", {
             classes: ["column"],
             styleRules: { gap: "0", alignItems: "center" },
         });
-        vote.appendChild(MakeElement("a", {
+        vote.appendChild(Tag("a", {
             classes: ["vote", "up-arrow"],
             href: `/comments/${this.commentId}/rate-up`,
         }));
-        vote.appendChild(MakeElement("span", {
+        vote.appendChild(Tag("span", {
             classes: ["comment-rating"],
             textContent: this.rating,
         }));
-        vote.appendChild(MakeElement("a", {
+        vote.appendChild(Tag("a", {
             classes: ["vote", "down-arrow"],
             href: `/comments/${this.commentId}/rate-down`,
         }));
 
         root.appendChild(vote);
 
-        const body = MakeElement("div", { styleRules: { flex: "1" } });
-        const userHeading = MakeElement("h6", { classes: ["short"] });
-        userHeading.appendChild(MakeElement("a", {
+        const body = Tag("div", { styleRules: { flex: "1" } });
+        const userHeading = Tag("h6", { classes: ["short"] });
+        userHeading.appendChild(Tag("a", {
             href: `/users/${this.userId}`,
             textContent: this.username,
         }));
         if (this.parentCommentId) {
             userHeading.appendChild(new Text(" replying to "));
-            userHeading.appendChild(MakeElement("a", {
+            userHeading.appendChild(Tag("a", {
                 href: `#comment-${this.parentCommentId}`,
                 textContent: this.parentCommentUsername,
             }));
         }
         body.appendChild(userHeading);
 
-        const commentBody = MakeElement("div", { classes: ["comment-body"] });
-        commentBody.appendChild(MakeElement("p", {
+        const commentBody = Tag("div", { classes: ["comment-body"] });
+        commentBody.appendChild(Tag("p", {
             classes: ["short", "content", "pre-space"],
             textContent: this.content,
         }));
 
-        const linkSpan = MakeElement("span", {
+        const linkSpan = Tag("span", {
             classes: ["comment-links", "short", "row"],
             styleRules: { fontSize: ".8em" },
         });
@@ -330,7 +340,7 @@ class CringeComment extends HTMLElement {
             editLink.addEventListener("click", () => this.showEditForm());
             linkSpan.appendChild(editLink);
 
-            linkSpan.appendChild(MakeElement("a", {
+            linkSpan.appendChild(Tag("a", {
                 href: `/comments/${this.commentId}/delete`,
                 textContent: "Delete",
             }));
@@ -342,7 +352,7 @@ class CringeComment extends HTMLElement {
         this.appendChild(root);
 
         if (this.replies.length > 0) {
-            const replies = MakeElement("div", { classes: ["comment-replies"] });
+            const replies = Tag("div", { classes: ["comment-replies"] });
             for (const reply of this.replies) {
                 replies.appendChild(new CringeComment(reply));
             }
@@ -390,7 +400,7 @@ class CringeComment extends HTMLElement {
     addReply(reply) {
         let replies = this.querySelector(".comment-replies");
         if (replies === null) {
-            replies = MakeElement("div", { classes: ["comment-replies"] });
+            replies = Tag("div", { classes: ["comment-replies"] });
             this.appendChild(replies);
         }
         replies.appendChild(reply);
