@@ -42,21 +42,20 @@ class CommentForm extends HTMLElement {
     } = {}) {
         super();
 
-        this.commentId = commentId;
-        this.username = username;
-
-        this.parentCommentId = parentCommentId;
+        this.cringeId              = cringeId;
+        this.commentId             = commentId;
+        this.username              = username;
+        this.content               = content;
+        this.parentCommentId       = parentCommentId;
         this.parentCommentUsername = parentCommentUsername;
+        this.hiddenElement         = hiddenElement;
+        this.focusOnLoad           = focusOnLoad;
 
-        this.hiddenElement = hiddenElement;
-        this.cringeId = cringeId;
-        this.content = content;
-        this.focusOnLoad = focusOnLoad;
         this.isEditForm = !!this.commentId;
     }
 
     connectedCallback() {
-        this.cringeId = this.cringeId ?? this.getAttribute("cringe-id");
+        this.cringeId ??= this.getAttribute("cringe-id");
 
         /** @type {HTMLTextAreaElement} */
         const commentTextArea = Tag("textarea", {
@@ -197,49 +196,41 @@ class CommentForm extends HTMLElement {
 
 class CringeComment extends HTMLElement {
     constructor({
-        id,
-        cringe_id,
-        user_id,
-        username,
-        content,
-        rating,
-        replies,
-        parent_comment_id,
-        parent_comment_username,
-        created_at,
+        id, username, content, rating, replies,
 
-        cringeId,
-        userId,
-        parentCommentId,
-        parentCommentUsername,
-        createdAt,
+        cringe_id, cringeId,
+        parent_comment_id, parentCommentId,
+        parent_comment_username, parentCommentUsername,
+        created_at, createdAt,
+        user_id, userId,
     } = {}) {
         super();
 
         this.commentId = id;
-        this.cringeId = cringeId ?? cringe_id;
-        this.userId = userId ?? user_id;
-        this.username = username;
-        this.content = content;
-        this.rating = rating;
-        this.parentCommentId = parentCommentId ?? parent_comment_id;
+        this.username  = username;
+        this.content   = content;
+        this.rating    = rating;
+        this.replies   = replies ?? [];
+
+        this.cringeId              = cringeId ?? cringe_id;
+        this.userId                = userId ?? user_id;
+        this.parentCommentId       = parentCommentId ?? parent_comment_id;
         this.parentCommentUsername = parentCommentUsername ?? parent_comment_username;
-        this.replies = replies ?? [];
-        this.createdAt = created_at ?? createdAt;
+        this.createdAt             = created_at ?? createdAt;
     }
 
     connectedCallback() {
-        this.commentId = this.getAttribute("id") ?? this.commentId;
-        this.parentCommentId = this.getAttribute("parent-comment-id") ?? this.parentCommentId;
-        this.userId = this.getAttribute("user-id") ?? this.userId;
-        this.username = this.getAttribute("username") ?? this.username;
-        this.rating = this.getAttribute("rating") ?? this.rating;
+        this.commentId       ??= this.getAttribute("id");
+        this.parentCommentId ??= this.getAttribute("parent-comment-id");
+        this.userId          ??= this.getAttribute("user-id");
+        this.username        ??= this.getAttribute("username");
+        this.rating          ??= this.getAttribute("rating");
+        this.content         ??= this.textContent;
 
         this.parentCommentId = Number(this.parentCommentId);
         this.userId = Number(this.userId);
 
         this.id = `comment-${this.commentId}`;
-        this.content = this.content ?? this.textContent;
         this.textContent = "";
 
         const canEdit = (authUser.isAdmin || authUser.id === this.userId);
